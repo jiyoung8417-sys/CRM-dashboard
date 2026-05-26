@@ -4,224 +4,196 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>영업 파이프라인 CRM</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Pretendard',sans-serif;background:#F2F5FA;color:#0F172A;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#F2F5FA;color:#0F172A;min-height:100vh;font-size:14px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:4px}
-input,button,select{font-family:inherit}
+input,button{font-family:inherit}
 
-/* HEADER */
 .hdr{background:#0B1F45;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(11,31,69,.28)}
-.hdr-logo{display:flex;align-items:center;gap:10px}
-.hdr-icon{width:30px;height:30px;background:#2563EB;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.hdr-icon svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.hdr-name{font-size:14px;font-weight:700;color:#fff;line-height:1.3}
-.hdr-sub{font-size:10px;color:#93C5FD}
+.hdr-left{display:flex;align-items:center;gap:10px}
+.hdr-ic{width:30px;height:30px;background:#2563EB;border-radius:7px;display:flex;align-items:center;justify-content:center}
+.hdr-ic svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hdr-nm{font-size:14px;font-weight:700;color:#fff}
+.hdr-sb{font-size:10px;color:#93C5FD}
 .hdr-right{display:flex;align-items:center;gap:8px}
-.hdr-badge{background:#EF4444;color:#fff;font-size:11px;font-weight:600;padding:3px 11px;border-radius:20px}
-.hdr-mock{font-size:10px;background:rgba(255,255,255,.15);color:#FCD34D;padding:2px 8px;border-radius:20px;font-weight:600}
-.hdr-upd{font-size:10px;color:#7DD3FC}
-.tab-nav{display:flex;gap:2px}
-.tab-btn{padding:5px 14px;border-radius:7px;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:all .15s}
-.tab-btn.on{background:#2563EB;color:#fff}
-.tab-btn.off{background:transparent;color:#93C5FD}
+.badge-stale{background:#EF4444;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.badge-mock{background:rgba(255,255,255,.2);color:#FCD34D;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-upd{font-size:10px;color:#7DD3FC}
+.tabs{display:flex;gap:2px}
+.tab{padding:5px 14px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s}
+.tab.on{background:#2563EB;color:#fff}
+.tab.off{background:transparent;color:#93C5FD}
 
-/* FILTER BAR */
-.fbar{background:#fff;border-bottom:1px solid #E4EAF2;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:52px;z-index:40;box-shadow:0 1px 6px rgba(0,0,0,.04)}
-.fbar-group{display:flex;align-items:center;gap:6px}
-.fbar-label{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.fbar{background:#fff;border-bottom:1px solid #E4EAF2;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:52px;z-index:40;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.fg{display:flex;align-items:center;gap:6px}
+.fl{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
 .seg{display:flex;background:#F1F5F9;border-radius:8px;padding:2px;gap:2px}
-.seg-btn{padding:4px 10px;border-radius:6px;border:none;background:transparent;font-size:11px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
-.seg-btn.on{background:#fff;color:#0B1F45;box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.fbar-count{font-size:11px;color:#94A3B8;margin-left:auto}
-.fbar-count strong{color:#475569}
+.sb{padding:4px 10px;border-radius:6px;border:none;background:transparent;font-size:11px;font-weight:600;color:#64748B;cursor:pointer;white-space:nowrap;transition:all .12s}
+.sb.on{background:#fff;color:#0B1F45;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.fc{font-size:11px;color:#94A3B8;margin-left:auto}
+.fc strong{color:#475569}
 
-/* MAIN */
 .main{max-width:1280px;margin:0 auto;padding:18px 20px 40px}
 .view{display:none}
 .view.on{display:block}
-.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
-@media(max-width:800px){.cards-grid{grid-template-columns:1fr}}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
 
-/* CARD */
-.card{background:#fff;border-radius:13px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.04);transition:border-color .15s}
-.card.normal{border:1px solid #E4EAF2}
+.card{background:#fff;border-radius:13px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.04);border:1px solid #E4EAF2}
 .card.stale{border:2px solid #EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
-.card-tl{flex:1;min-width:0}
-.card-tags{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.ctl{flex:1;min-width:0}
+.ctags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
 .tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap}
-.card-title{font-size:13px;font-weight:600;color:#0F172A;line-height:1.4;word-break:keep-all}
-.stale-box{flex-shrink:0;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:6px 10px;text-align:center;min-width:58px}
-.stale-days{font-size:16px;font-weight:700;color:#DC2626;line-height:1;font-family:'DM Mono',monospace}
-.stale-lbl{font-size:9px;font-weight:600;color:#F87171;margin-top:2px}
-.ph{flex-shrink:0;width:58px}
+.ctitle{font-size:13px;font-weight:600;color:#0F172A;line-height:1.4;word-break:keep-all}
+.sbox{flex-shrink:0;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:6px 10px;text-align:center;min-width:58px}
+.sd{font-size:16px;font-weight:700;color:#DC2626;line-height:1;font-family:monospace}
+.sl{font-size:9px;font-weight:600;color:#F87171;margin-top:2px}
 
-/* PIPELINE */
+/* pipeline bar */
 .pipe{display:flex;align-items:center;width:100%;padding:2px 0 6px}
-.pn{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
-.pd{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
-.pt{font-size:9px;font-weight:500;white-space:nowrap}
-.ps{flex:1;height:2.5px;margin:0 2px 14px;border-radius:2px;min-width:6px}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.pdot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.ptxt{font-size:9px;font-weight:500;white-space:nowrap}
+.pline{flex:1;height:2.5px;margin:0 2px 14px;border-radius:2px;min-width:6px}
 
-/* CARD INFO */
-.ci{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid #F8FAFC;padding-top:10px}
-.ci-item{display:flex;align-items:center;gap:4px;font-size:11px;color:#475569}
-.ci-meta{font-size:11px;color:#8496B0;font-family:'DM Mono',monospace}
-.fail-note{margin-top:10px;background:#FFF5F5;border:1px solid #FECACA;border-radius:8px;padding:8px 12px;display:flex;gap:7px}
-.fn-lbl{font-size:10px;font-weight:700;color:#991B1B;display:block;margin-bottom:2px}
-.fn-txt{font-size:11px;color:#7F1D1D;line-height:1.5}
+.cinfo{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid #F8FAFC;padding-top:10px}
+.ci{font-size:11px;color:#475569}
+.cmeta{font-size:11px;color:#8496B0;font-family:monospace}
+.fnote{margin-top:10px;background:#FFF5F5;border:1px solid #FECACA;border-radius:8px;padding:8px 12px;display:flex;gap:7px}
+.fnl{font-size:10px;font-weight:700;color:#991B1B;display:block;margin-bottom:2px}
+.fnt{font-size:11px;color:#7F1D1D;line-height:1.5}
 
-/* WIN/LOSS */
-.wl-wrap{background:#fff;border-radius:13px;border:1px solid #E4EAF2;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.wl-title{font-size:12px;font-weight:600;color:#64748B;margin-bottom:14px}
-.wl-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.wl-sub{font-size:11px;font-weight:700;margin-bottom:10px}
-.wl-row{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}
-.wl-ch{height:120px;position:relative}
-.wl-leg{display:flex;flex-direction:column;gap:7px}
-.wl-li{display:flex;align-items:center;gap:7px;font-size:11px;color:#475569}
-.wl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.wl-pct{font-weight:600;color:#0F172A;margin-left:auto;font-family:'DM Mono',monospace;font-size:11px}
+/* win/loss bars */
+.wl-card{background:#fff;border-radius:13px;border:1px solid #E4EAF2;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.wl-ttl{font-size:12px;font-weight:600;color:#64748B;margin-bottom:16px}
+.wl-2col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:600px){.wl-2col{grid-template-columns:1fr}}
+.wl-sub{font-size:11px;font-weight:700;margin-bottom:12px}
+.bar-item{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-lbl{font-size:11px;color:#475569;width:120px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;height:10px;background:#F1F5F9;border-radius:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:20px}
+.bar-val{font-size:11px;font-weight:600;width:32px;text-align:right;font-family:monospace}
 
-/* PAGE 2 */
-.p2-section{background:#fff;border-radius:13px;border:1px solid #E4EAF2;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.p2-title{font-size:13px;font-weight:600;color:#475569;margin-bottom:14px}
+/* page 2 */
+.p2sec{background:#fff;border-radius:13px;border:1px solid #E4EAF2;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.p2ttl{font-size:13px;font-weight:600;color:#475569;margin-bottom:14px}
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;background:#F8FAFD;border-bottom:1px solid #E4EAF2;white-space:nowrap}
-.tbl td{padding:10px 12px;border-bottom:1px solid #F8FAFC;vertical-align:middle}
+.tbl td{padding:9px 12px;border-bottom:1px solid #F8FAFC;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:#FAFBFF}
-.pill{display:inline-flex;align-items:center;justify-content:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace}
-.rate-wrap{display:flex;align-items:center;gap:8px}
-.rate-track{flex:1;height:6px;background:#F1F5F9;border-radius:20px;overflow:hidden}
-.rate-fill{height:100%;border-radius:20px}
-.rate-val{font-size:11px;font-weight:700;width:36px;text-align:right;font-family:'DM Mono',monospace}
-.search-wrap{position:relative}
-.search-wrap input{padding-left:28px;padding-right:12px;padding-top:7px;padding-bottom:7px;font-size:12px;border:1px solid #E4EAF2;border-radius:8px;outline:none;width:240px;color:#0F172A}
-.search-wrap input:focus{border-color:#2563EB}
-.search-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none}
-.sortable{cursor:pointer;user-select:none}
-.sortable:hover{color:#475569}
-.empty{text-align:center;padding:60px;color:#94A3B8;font-size:13px;grid-column:1/-1}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;font-family:monospace}
+.rbar{display:flex;align-items:center;gap:8px}
+.rtrack{flex:1;height:6px;background:#F1F5F9;border-radius:20px;overflow:hidden}
+.rfill{height:100%;border-radius:20px}
+.rval{font-size:11px;font-weight:700;width:34px;text-align:right;font-family:monospace}
+.sw{position:relative}
+.sw input{padding:7px 12px 7px 28px;font-size:12px;border:1px solid #E4EAF2;border-radius:8px;outline:none;width:240px;color:#0F172A}
+.sw input:focus{border-color:#2563EB}
+.sw-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:#94A3B8}
+.sth{cursor:pointer;user-select:none}
+.sth:hover{color:#475569}
+.empty{text-align:center;padding:60px;color:#94A3B8;font-size:13px}
+.p2top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
 </style>
 </head>
 <body>
-<div id="root">
-  <!-- HEADER -->
-  <div class="hdr">
-    <div class="hdr-logo">
-      <div class="hdr-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-      <div><div class="hdr-name">영업 파이프라인 CRM</div><div class="hdr-sub">Sales Pipeline Management</div></div>
-    </div>
-    <div class="hdr-right">
-      <span class="hdr-mock" id="mock-badge" style="display:none">📊 Mock Data</span>
-      <span class="hdr-upd" id="upd-badge" style="display:none"></span>
-      <span class="hdr-badge" id="stale-badge" style="display:none"></span>
-      <div class="tab-nav">
-        <button class="tab-btn on" onclick="switchTab('p1')">📋 파이프라인</button>
-        <button class="tab-btn off" onclick="switchTab('p2')">📊 상세 현황</button>
-      </div>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-ic"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+    <div><div class="hdr-nm">영업 파이프라인 CRM</div><div class="hdr-sb">Sales Pipeline Management</div></div>
+  </div>
+  <div class="hdr-right">
+    <span class="badge-mock" id="bmock" style="display:none">📊 Mock Data</span>
+    <span class="badge-upd" id="bupd" style="display:none"></span>
+    <span class="badge-stale" id="bstale" style="display:none"></span>
+    <div class="tabs">
+      <button class="tab on" onclick="gotoTab('p1')">📋 파이프라인</button>
+      <button class="tab off" onclick="gotoTab('p2')">📊 상세 현황</button>
     </div>
   </div>
+</div>
 
-  <!-- PAGE 1 -->
-  <div id="view-p1" class="view on">
-    <div class="fbar" id="fbar"></div>
-    <div class="main">
-      <div class="cards-grid" id="cards-grid"></div>
-      <div class="wl-wrap">
-        <div class="wl-title">📊 Win / Loss 분석</div>
-        <div class="wl-grid">
-          <div>
-            <div class="wl-sub" style="color:#16A34A">🏆 성공 요인</div>
-            <div class="wl-row">
-              <div class="wl-ch"><canvas id="wChart"></canvas></div>
-              <div class="wl-leg" id="wLeg"></div>
-            </div>
-          </div>
-          <div>
-            <div class="wl-sub" style="color:#DC2626">📉 이탈 사유</div>
-            <div class="wl-row">
-              <div class="wl-ch"><canvas id="lChart"></canvas></div>
-              <div class="wl-leg" id="lLeg"></div>
-            </div>
-          </div>
+<!-- PAGE 1 -->
+<div id="vp1" class="view on">
+  <div class="fbar" id="fbar"></div>
+  <div class="main">
+    <div class="grid2" id="cardgrid"></div>
+    <!-- Win/Loss -->
+    <div class="wl-card">
+      <div class="wl-ttl">📊 Win / Loss 분석</div>
+      <div class="wl-2col">
+        <div>
+          <div class="wl-sub" style="color:#16A34A">🏆 성공 요인</div>
+          <div id="wbars"></div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAGE 2 -->
-  <div id="view-p2" class="view">
-    <div class="main">
-      <div class="p2-section">
-        <div class="p2-title">👥 담당자별 파이프라인 현황</div>
-        <div style="overflow-x:auto"><table class="tbl" id="rep-table"></table></div>
-      </div>
-      <div class="p2-section">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-          <div class="p2-title" style="margin-bottom:0">📋 계약 리스트 <span id="contract-count" style="font-size:11px;color:#94A3B8;font-weight:400"></span></div>
-          <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" id="search-input" placeholder="고객사, 영업기회, 담당자 검색..." oninput="renderContracts()"/></div>
+        <div>
+          <div class="wl-sub" style="color:#DC2626">📉 이탈 사유</div>
+          <div id="lbars"></div>
         </div>
-        <div style="overflow-x:auto"><table class="tbl" id="contract-table"></table></div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- PAGE 2 -->
+<div id="vp2" class="view">
+  <div class="main">
+    <div class="p2sec">
+      <div class="p2ttl">👥 담당자별 파이프라인 현황</div>
+      <div style="overflow-x:auto"><table class="tbl" id="reptbl"></table></div>
+    </div>
+    <div class="p2sec">
+      <div class="p2top">
+        <div class="p2ttl" style="margin-bottom:0">📋 계약 리스트 <span id="ccount" style="font-size:11px;color:#94A3B8;font-weight:400"></span></div>
+        <div class="sw"><span class="sw-ico">🔍</span><input id="srch" placeholder="고객사, 영업기회, 담당자 검색..." oninput="renderContracts()"/></div>
+      </div>
+      <div style="overflow-x:auto"><table class="tbl" id="ctbl"></table></div>
+    </div>
+  </div>
+</div>
+
 <script>
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  구글 시트 CSV URL 3개                                        ║
-// ╚══════════════════════════════════════════════════════════════╝
-const URLS = {
-  opp:      "https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=0&single=true&output=csv",
-  contract: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=1887387173&single=true&output=csv",
-  group:    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=305091937&single=true&output=csv",
+// ══════════════════════════════════════════════
+// 구글 시트 CSV URL
+// ══════════════════════════════════════════════
+const URLS={
+  opp:"https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=0&single=true&output=csv",
+  contract:"https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=1887387173&single=true&output=csv",
+  group:"https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=305091937&single=true&output=csv",
 };
 
-// ── 상수 ──
-const STAGES = ['기회인지','제안','견적','계약','개통완료'];
-const SCOL   = ['#E85D2E','#C026D3','#2563EB','#D97706','#16A34A'];
-const META   = '#8496B0';
-const STATUS_MAP = {
-  '진행중':    {label:'진행중',    bg:'#DBEAFE',tx:'#1E40AF',ic:'●'},
-  '종료(성공)':{label:'완료',      bg:'#D1FAE5',tx:'#065F46',ic:'✓'},
-  '종료(실패)':{label:'실패',      bg:'#FEE2E2',tx:'#991B1B',ic:'✕'},
-  '보류/연기': {label:'보류',      bg:'#F3F4F6',tx:'#374151',ic:'◐'},
-};
-const WIN_D  = [{n:'가격 경쟁력',v:38},{n:'기술 우위',v:29},{n:'관계·신뢰',v:22},{n:'납기·속도',v:11}];
-const LOSS_D = [{n:'가격 경쟁력 저하',v:42},{n:'스펙 불일치',v:26},{n:'경쟁사 선택',v:19},{n:'예산 삭감',v:13}];
+const STAGES=['기회인지','제안','견적','계약','개통완료'];
+const SC=['#E85D2E','#C026D3','#2563EB','#D97706','#16A34A'];
+const SM={'진행중':{l:'진행중',bg:'#DBEAFE',tx:'#1E40AF',ic:'●'},'종료(성공)':{l:'완료',bg:'#D1FAE5',tx:'#065F46',ic:'✓'},'종료(실패)':{l:'실패',bg:'#FEE2E2',tx:'#991B1B',ic:'✕'},'보류/연기':{l:'보류',bg:'#F3F4F6',tx:'#374151',ic:'◐'}};
+const WD=[{n:'가격 경쟁력',v:38},{n:'기술 우위',v:29},{n:'관계·신뢰',v:22},{n:'납기·속도',v:11}];
+const LD=[{n:'가격 경쟁력 저하',v:42},{n:'스펙 불일치',v:26},{n:'경쟁사 선택',v:19},{n:'예산 삭감',v:13}];
+const WC=['#16A34A','#22C55E','#4ADE80','#86EFAC'];
+const LC=['#EF4444','#F87171','#FCA5A5','#F97316'];
 
-// ── Mock Data ──
-const MOCK_GROUP = [
-  {이름:'박현민',그룹:'1그룹'},{이름:'이영철',그룹:'1그룹'},{이름:'나영기',그룹:'1그룹'},
-  {이름:'조혜란',그룹:'1그룹'},{이름:'김창석',그룹:'1그룹'},{이름:'이민혁',그룹:'2그룹'},
-  {이름:'신헌우',그룹:'2그룹'},{이름:'박준호',그룹:'2그룹'},{이름:'남승지',그룹:'2그룹'},
-  {이름:'김민수',그룹:'3그룹'},{이름:'손민욱',그룹:'3그룹'},{이름:'김동후',그룹:'3그룹'},
-  {이름:'이상호',그룹:'3그룹'},
-];
-const MOCK_OPP = [
+const MG=[{이름:'박현민',그룹:'1그룹'},{이름:'이영철',그룹:'1그룹'},{이름:'나영기',그룹:'1그룹'},{이름:'조혜란',그룹:'1그룹'},{이름:'김창석',그룹:'1그룹'},{이름:'이민혁',그룹:'2그룹'},{이름:'신헌우',그룹:'2그룹'},{이름:'박준호',그룹:'2그룹'},{이름:'남승지',그룹:'2그룹'},{이름:'김민수',그룹:'3그룹'},{이름:'손민욱',그룹:'3그룹'},{이름:'김동후',그룹:'3그룹'},{이름:'이상호',그룹:'3그룹'}];
+const MO=[
   {영업기회ID:'1074',영업기회:'(신규)_앰엔와이즈 Colocation',고객사:'엠앤와이즈',담당자:'손민욱',진행상태:'진행중',제품:'기업코로케이션',예상매출:0,시작일:'2026.05.22',변경일:'',단계:'기회인지',비고:''},
-  {영업기회ID:'1073',영업기회:'[재계약] 선문대학교 5차년도 재계약 협의 (8.45백/월)',고객사:'선문대학교',담당자:'이영철',진행상태:'진행중',제품:'기업인터넷',예상매출:8452,시작일:'2026.05.22',변경일:'',단계:'기회인지',비고:''},
-  {영업기회ID:'1072',영업기회:'KINX가산 ~ SL4 간 전용회선 100M 제안',고객사:'케이아이엔엑스',담당자:'나영기',진행상태:'진행중',제품:'기업전용회선',예상매출:2000,시작일:'2026.05.21',변경일:'2026.05.21',단계:'견적',비고:''},
-  {영업기회ID:'1071',영업기회:'Epsilontel KR DIA request KINX Gasan 500M',고객사:'Epsilontel',담당자:'이영철',진행상태:'진행중',제품:'글로벌인터넷',예상매출:2100,시작일:'2026.05.18',변경일:'2026.05.21',단계:'견적',비고:''},
+  {영업기회ID:'1073',영업기회:'[재계약] 선문대학교 5차년도 재계약 협의',고객사:'선문대학교',담당자:'이영철',진행상태:'진행중',제품:'기업인터넷',예상매출:8452,시작일:'2026.05.22',변경일:'',단계:'기회인지',비고:''},
+  {영업기회ID:'1072',영업기회:'KINX가산~SL4 간 전용회선 100M 제안',고객사:'케이아이엔엑스',담당자:'나영기',진행상태:'진행중',제품:'기업전용회선',예상매출:2000,시작일:'2026.05.21',변경일:'2026.05.21',단계:'견적',비고:''},
+  {영업기회ID:'1071',영업기회:'Epsilontel KR DIA request 500M',고객사:'Epsilontel',담당자:'이영철',진행상태:'진행중',제품:'글로벌인터넷',예상매출:2100,시작일:'2026.05.18',변경일:'2026.05.21',단계:'견적',비고:''},
   {영업기회ID:'1066',영업기회:'[전용회선] Telstra / 서초KIDC - 드림마크원 구로DC / 100M',고객사:'텔스트라서비스코리아',담당자:'김창석',진행상태:'진행중',제품:'글로벌DCI',예상매출:1500,시작일:'2026.05.18',변경일:'2026.05.19',단계:'견적',비고:''},
   {영업기회ID:'1064',영업기회:'[선로설비] China Unicom / KINX가산-LG평촌 / 4Pairs',고객사:'China Unicom Korea',담당자:'김창석',진행상태:'진행중',제품:'글로벌선로설비',예상매출:20000,시작일:'2026.05.18',변경일:'2026.05.20',단계:'견적',비고:''},
   {영업기회ID:'1063',영업기회:'(신규)_LX 1G 전용회선 영업',고객사:'엘엑스',담당자:'손민욱',진행상태:'진행중',제품:'기업전용회선',예상매출:1400,시작일:'2026.05.11',변경일:'2026.05.20',단계:'제안',비고:''},
   {영업기회ID:'1057',영업기회:'CJ올리브네트웍스 신규 인터넷전용회선 제안',고객사:'씨제이올리브네트웍스',담당자:'신헌우',진행상태:'진행중',제품:'기업인터넷',예상매출:14000,시작일:'2026.05.11',변경일:'2026.05.18',단계:'견적',비고:''},
   {영업기회ID:'1045',영업기회:'Megaport 10G*1회선 전용회선',고객사:'Megaport',담당자:'조혜란',진행상태:'보류/연기',제품:'글로벌전용회선',예상매출:2800,시작일:'2026.04.20',변경일:'2026.04.28',단계:'견적',비고:''},
-  {영업기회ID:'1068',영업기회:'[전용회선] AT&T / 논현 KIDC ~ 캐피탈타워 / 200M',고객사:'에이티엔티코리아',담당자:'김창석',진행상태:'종료(성공)',제품:'글로벌전용회선',예상매출:1600,시작일:'2026.05.19',변경일:'2026.05.19',단계:'계약',비고:''},
+  {영업기회ID:'1068',영업기회:'AT&T / 논현 KIDC ~ 캐피탈타워 / 200M',고객사:'에이티엔티코리아',담당자:'김창석',진행상태:'종료(성공)',제품:'글로벌전용회선',예상매출:1600,시작일:'2026.05.19',변경일:'2026.05.19',단계:'계약',비고:''},
   {영업기회ID:'1067',영업기회:'SKB 한일네트웍스 공덕IDC~송도IDC 5M*2회선',고객사:'SK브로드밴드',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:1900,시작일:'2026.04.22',변경일:'2026.05.22',단계:'개통완료',비고:''},
-  {영업기회ID:'1059',영업기회:'[재계약] 아이나비시스템즈 대구전용회선 E1*1회선',고객사:'아이나비시스템즈',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:800,시작일:'2026.05.12',변경일:'2026.05.22',단계:'개통완료',비고:''},
-  {영업기회ID:'1058',영업기회:'[재계약] 한국도로공사 전용회선 5M*1회선',고객사:'한국도로공사',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:600,시작일:'2026.05.12',변경일:'2026.05.19',단계:'개통완료',비고:''},
-  {영업기회ID:'1036',영업기회:'금융감독원 본원~신용정보원간 30M*1회선 제공',고객사:'금융감독원',담당자:'이영철',진행상태:'종료(실패)',제품:'기업전용회선',예상매출:500,시작일:'2026.04.22',변경일:'2026.05.08',단계:'견적',비고:'타 통신사 대비 가격 경쟁력 저하'},
-  {영업기회ID:'1027',영업기회:'Kaopu Cloud Equinix SL1 ~ DLR ICN10 2회선',고객사:'Kaopu Cloud',담당자:'박준호',진행상태:'종료(실패)',제품:'글로벌전용회선',예상매출:14000,시작일:'2026.03.23',변경일:'2026.04.20',단계:'견적',비고:'스펙 불일치 — 요구 대역폭 충족 불가'},
-  {영업기회ID:'930',영업기회:'[Valve] IP Transit KINX Bundang 100GE 60% Commit',고객사:'Valve Software',담당자:'조혜란',진행상태:'종료(실패)',제품:'글로벌IX',예상매출:134400,시작일:'2026.02.06',변경일:'2026.04.06',단계:'제안',비고:'경쟁사 선택 — 가격 조건 불일치'},
+  {영업기회ID:'1059',영업기회:'[재계약] 아이나비시스템즈 대구전용회선 E1',고객사:'아이나비시스템즈',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:800,시작일:'2026.05.12',변경일:'2026.05.22',단계:'개통완료',비고:''},
+  {영업기회ID:'1036',영업기회:'금융감독원 본원~신용정보원간 30M',고객사:'금융감독원',담당자:'이영철',진행상태:'종료(실패)',제품:'기업전용회선',예상매출:500,시작일:'2026.04.22',변경일:'2026.05.08',단계:'견적',비고:'타 통신사 대비 가격 경쟁력 저하'},
+  {영업기회ID:'930',영업기회:'[Valve] IP Transit KINX Bundang 100GE',고객사:'Valve Software',담당자:'조혜란',진행상태:'종료(실패)',제품:'글로벌IX',예상매출:134400,시작일:'2026.02.06',변경일:'2026.04.06',단계:'제안',비고:'경쟁사 선택 — 가격 조건 불일치'},
 ];
-const MOCK_CONTRACT = [
+const MC=[
   {고객사:'SK브로드밴드',영업기회ID:'1067',계약일:'2026.05.22',연관제품:'기업전용회선',공급가액:1800,담당자:'이영철'},
   {고객사:'에이티엔티코리아',영업기회ID:'1068',계약일:'2026.05.19',연관제품:'글로벌전용회선',공급가액:1600,담당자:'김창석'},
   {고객사:'아이나비시스템즈',영업기회ID:'1059',계약일:'2026.05.19',연관제품:'기업전용회선',공급가액:800,담당자:'이영철'},
@@ -229,310 +201,222 @@ const MOCK_CONTRACT = [
   {고객사:'Tencent',영업기회ID:'989',계약일:'2026.05.08',연관제품:'글로벌DCI',공급가액:16400,담당자:'김창석'},
 ];
 
-// ── 전역 상태 ──
-let ALL_OPP=[], ALL_CONTRACT=[], GROUP_MAP={};
-let currentTab='p1';
-let filters={status:'전체',stage:'전체',group:'전체',rep:'전체'};
-let contractSort={col:'계약일',dir:-1};
-let winChart=null, lossChart=null;
+let OPP=[],CONTRACT=[],GM={},F={status:'전체',stage:'전체',group:'전체',rep:'전체'};
+let CS={col:'계약일',dir:-1};
 
-// ── CSV 파서 ──
-function parseCSV(text){
-  if(!text||!text.trim()) return [];
+function csv(t){
+  if(!t||!t.trim()) return [];
   try{
-    const lines=text.trim().split(/\r?\n/);
-    const hdrs=lines[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim());
-    return lines.slice(1).filter(l=>l.trim()).map(line=>{
-      const vals=[]; let cur='',inQ=false;
-      for(const c of line){
-        if(c==='"') inQ=!inQ;
-        else if(c===','&&!inQ){vals.push(cur);cur='';}
-        else cur+=c;
-      }
-      vals.push(cur);
-      const obj={};
-      hdrs.forEach((h,i)=>obj[h]=(vals[i]||'').replace(/^"|"$/g,'').trim());
-      return obj;
+    const ls=t.trim().split(/\r?\n/);
+    const hs=ls[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim());
+    return ls.slice(1).filter(l=>l.trim()).map(l=>{
+      const vs=[]; let c='',q=false;
+      for(const x of l){if(x==='"')q=!q;else if(x===','&&!q){vs.push(c);c='';}else c+=x;}
+      vs.push(c);
+      const o={}; hs.forEach((h,i)=>o[h]=(vs[i]||'').replace(/^"|"$/g,'').trim());
+      return o;
     }).filter(r=>Object.values(r).some(v=>v));
   }catch(e){return [];}
 }
 
-// ── 헬퍼 ──
-function daysDiff(s){
+function dd(s){
   if(!s) return 999;
   const p=String(s).split('.');
   if(p.length!==3) return 999;
   return Math.floor((Date.now()-new Date(+p[0],+p[1]-1,+p[2]).getTime())/86400000);
 }
-function isStale(o){
-  if(o.진행상태!=='진행중') return false;
-  if(['개통완료','계약'].includes(o.단계)) return false;
-  return daysDiff(o.변경일||o.시작일)>=14;
+function stale(o){return o.진행상태==='진행중'&&!['개통완료','계약'].includes(o.단계)&&dd(o.변경일||o.시작일)>=14;}
+function fmtA(n){
+  const v=Number(n)*1000;
+  if(!v) return '';
+  if(v>=100000000) return (v/100000000).toFixed(1)+'억원';
+  if(v>=10000000) return Math.round(v/10000000)+'천만원';
+  if(v>=1000000) return (v/1000000).toFixed(1)+'백만원';
+  if(v>=10000) return Math.round(v/10000)+'만원';
+  return v.toLocaleString()+'원';
 }
-function fmtAmt(n){
-  const num=Number(n)*1000;
-  if(!num||num===0) return '';
-  if(num>=100000000) return (num/100000000).toFixed(1)+'억원';
-  if(num>=10000000) return Math.round(num/10000000)+'천만원';
-  if(num>=1000000) return (num/1000000).toFixed(1)+'백만원';
-  if(num>=10000) return Math.round(num/10000)+'만원';
-  return num.toLocaleString()+'원';
-}
-function fmtAmtDirect(n){
-  const num=Number(n)*1000;
-  if(!num) return '-';
-  if(num>=100000000) return (num/100000000).toFixed(1)+'억원';
-  if(num>=10000000) return Math.round(num/10000000)+'천만원';
-  if(num>=1000000) return (num/1000000).toFixed(1)+'백만원';
-  if(num>=10000) return Math.round(num/10000)+'만원';
-  return num.toLocaleString()+'원';
-}
-function rateClr(r){return r>=60?'#16A34A':r>=30?'#D97706':'#EF4444';}
+function fmtAD(n){const v=Number(n)*1000;if(!v)return '-';if(v>=100000000)return(v/100000000).toFixed(1)+'억원';if(v>=10000000)return Math.round(v/10000000)+'천만원';if(v>=1000000)return(v/1000000).toFixed(1)+'백만원';if(v>=10000)return Math.round(v/10000)+'만원';return v.toLocaleString()+'원';}
+function rc(r){return r>=60?'#16A34A':r>=30?'#D97706':'#EF4444';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// ── 파이프라인 바 HTML ──
-function pipeBarHTML(opp){
-  const curr=STAGES.indexOf(opp.단계);
-  let html='<div class="pipe">';
+function pipeHTML(o){
+  const ci=STAGES.indexOf(o.단계);
+  let h='<div class="pipe">';
   STAGES.forEach((s,i)=>{
-    const done=i<=curr, c=SCOL[i], last=i===STAGES.length-1;
-    html+=`<div class="pn">
-      <div class="pd" style="background:${done?c:'#E5E7EB'};color:${done?'#fff':'#9CA3AF'};${done?`box-shadow:0 1px 5px ${c}66`:''}">${i+1}</div>
-      <span class="pt" style="color:${done?c:'#9CA3AF'}">${s}</span>
-    </div>`;
-    if(!last) html+=`<div class="ps" style="background:${i<curr?c:'#E5E7EB'}"></div>`;
+    const d=i<=ci,c=SC[i];
+    h+=`<div class="pnode"><div class="pdot" style="background:${d?c:'#E5E7EB'};color:${d?'#fff':'#9CA3AF'};${d?`box-shadow:0 1px 5px ${c}55`:''}">${i+1}</div><span class="ptxt" style="color:${d?c:'#9CA3AF'}">${s}</span></div>`;
+    if(i<STAGES.length-1) h+=`<div class="pline" style="background:${i<ci?c:'#E5E7EB'}"></div>`;
   });
-  return html+'</div>';
+  return h+'</div>';
 }
 
-// ── 카드 HTML ──
 function cardHTML(o){
-  const stale=isStale(o);
-  const staleDays=stale?daysDiff(o.변경일||o.시작일):0;
-  const showAmt=o.단계==='기회인지'&&Number(o.예상매출)>0;
-  const isFail=o.진행상태==='종료(실패)';
-  const showNote=isFail&&o.비고;
-  const cfg=STATUS_MAP[o.진행상태]||{label:o.진행상태,bg:'#F3F4F6',tx:'#374151',ic:'·'};
-  const refDate=o.변경일||o.시작일||'';
-  return `
-  <div class="card ${stale?'stale':'normal'}">
-    <div class="card-top">
-      <div class="card-tl">
-        <div class="card-tags">
-          <span class="tag" style="background:${cfg.bg};color:${cfg.tx}">${cfg.ic} ${cfg.label}</span>
+  const st=stale(o), sd=st?dd(o.변경일||o.시작일):0;
+  const sa=o.단계==='기회인지'&&Number(o.예상매출)>0;
+  const sn=o.진행상태==='종료(실패)'&&o.비고;
+  const cfg=SM[o.진행상태]||{l:o.진행상태,bg:'#F3F4F6',tx:'#374151',ic:'·'};
+  const rd=o.변경일||o.시작일||'';
+  return `<div class="card${st?' stale':''}">
+    <div class="ctop">
+      <div class="ctl">
+        <div class="ctags">
+          <span class="tag" style="background:${cfg.bg};color:${cfg.tx}">${cfg.ic} ${cfg.l}</span>
           ${o.제품?`<span class="tag" style="background:#F3F4F6;color:#374151">${esc(o.제품)}</span>`:''}
         </div>
-        <div class="card-title">${esc(o.영업기회)}</div>
+        <div class="ctitle">${esc(o.영업기회)}</div>
       </div>
-      ${stale?`<div class="stale-box"><div class="stale-days">${staleDays}일</div><div class="stale-lbl">🚨 정체</div></div>`:'<div class="ph"></div>'}
+      ${st?`<div class="sbox"><div class="sd">${sd}일</div><div class="sl">🚨 정체</div></div>`:'<div style="width:58px;flex-shrink:0"></div>'}
     </div>
-    ${pipeBarHTML(o)}
-    <div class="ci">
-      <span class="ci-item"><strong style="color:#0F172A">${esc(o.담당자)}</strong>${o.group?` · ${esc(o.group)}`:''}</span>
-      <span class="ci-item">${esc(o.고객사)}</span>
-      <span class="ci-meta">${esc(o.시작일)}${refDate?' ~ '+esc(refDate):''}${showAmt?'   '+fmtAmt(o.예상매출):''}</span>
+    ${pipeHTML(o)}
+    <div class="cinfo">
+      <span class="ci"><strong style="color:#0F172A">${esc(o.담당자)}</strong>${o.group?` · ${esc(o.group)}`:''}</span>
+      <span class="ci">${esc(o.고객사)}</span>
+      <span class="cmeta">${esc(o.시작일)}${rd?' ~ '+esc(rd):''}${sa?'   '+fmtA(o.예상매출):''}</span>
     </div>
-    ${showNote?`<div class="fail-note"><span style="color:#DC2626;font-size:12px;flex-shrink:0">📋</span><div><span class="fn-lbl">실패 사유</span><span class="fn-txt">${esc(o.비고)}</span></div></div>`:''}
+    ${sn?`<div class="fnote"><span style="color:#DC2626;flex-shrink:0">📋</span><div><span class="fnl">실패 사유</span><span class="fnt">${esc(o.비고)}</span></div></div>`:''}
   </div>`;
 }
 
-// ── 필터 바 렌더 ──
-function renderFilterBar(){
-  const groups=['전체',...new Set(ALL_OPP.map(o=>o.group).filter(Boolean))];
-  const reps=['전체',...new Set(ALL_OPP.map(o=>o.담당자).filter(Boolean))];
-  const stages2=['전체',...STAGES];
-  const statuses=['전체','진행중','종료(성공)','종료(실패)','보류/연기'];
-  function seg(fk,opts){
-    return `<div class="seg">${opts.map(v=>`<button class="seg-btn${filters[fk]===v?' on':''}" onclick="setFilter('${fk}','${esc(v)}')">${esc(v)}</button>`).join('')}</div>`;
-  }
-  const filtered=getFiltered();
-  document.getElementById('fbar').innerHTML=`
-    <div class="fbar-group"><span class="fbar-label">상태</span>${seg('status',statuses)}</div>
-    <div class="fbar-group"><span class="fbar-label">단계</span>${seg('stage',stages2)}</div>
-    <div class="fbar-group"><span class="fbar-label">그룹</span>${seg('group',groups)}</div>
-    <div class="fbar-group"><span class="fbar-label">담당자</span>${seg('rep',reps)}</div>
-    <span class="fbar-count">총 <strong>${filtered.length}</strong>건</span>`;
-}
-
-function getFiltered(){
-  return ALL_OPP.filter(o=>{
-    if(filters.status!=='전체'&&o.진행상태!==filters.status) return false;
-    if(filters.stage!=='전체'&&o.단계!==filters.stage) return false;
-    if(filters.group!=='전체'&&o.group!==filters.group) return false;
-    if(filters.rep!=='전체'&&o.담당자!==filters.rep) return false;
+function filtered(){
+  return OPP.filter(o=>{
+    if(F.status!=='전체'&&o.진행상태!==F.status) return false;
+    if(F.stage!=='전체'&&o.단계!==F.stage) return false;
+    if(F.group!=='전체'&&o.group!==F.group) return false;
+    if(F.rep!=='전체'&&o.담당자!==F.rep) return false;
     return true;
   });
 }
 
-function setFilter(k,v){
-  filters[k]=v;
-  renderFilterBar();
-  renderCards();
-}
-window.setFilter=setFilter;
+function sf(k,v){F[k]=v;renderFbar();renderCards();}
+window.sf=sf;
 
-// ── 카드 렌더 ──
+function renderFbar(){
+  const gs=['전체',...new Set(OPP.map(o=>o.group).filter(Boolean))];
+  const rs=['전체',...new Set(OPP.map(o=>o.담당자).filter(Boolean))];
+  const ss2=['전체',...STAGES];
+  const sts=['전체','진행중','종료(성공)','종료(실패)','보류/연기'];
+  function seg(fk,opts){return `<div class="seg">${opts.map(v=>`<button class="sb${F[fk]===v?' on':''}" onclick="sf('${fk}','${esc(v)}')">${esc(v)}</button>`).join('')}</div>`;}
+  const fil=filtered();
+  document.getElementById('fbar').innerHTML=`
+    <div class="fg"><span class="fl">상태</span>${seg('status',sts)}</div>
+    <div class="fg"><span class="fl">단계</span>${seg('stage',ss2)}</div>
+    <div class="fg"><span class="fl">그룹</span>${seg('group',gs)}</div>
+    <div class="fg"><span class="fl">담당자</span>${seg('rep',rs)}</div>
+    <span class="fc">총 <strong>${fil.length}</strong>건</span>`;
+}
+
 function renderCards(){
-  const filtered=getFiltered();
-  const grid=document.getElementById('cards-grid');
-  if(!filtered.length){grid.innerHTML='<div class="empty">조건에 맞는 영업기회가 없습니다.</div>';return;}
-  grid.innerHTML=filtered.map(cardHTML).join('');
+  const fil=filtered();
+  const g=document.getElementById('cardgrid');
+  g.innerHTML=fil.length?fil.map(cardHTML).join(''):'<div class="empty">조건에 맞는 영업기회가 없습니다.</div>';
 }
 
-// ── Win/Loss 차트 ──
-function renderCharts(){
-  setTimeout(()=>{
-    const we=document.getElementById('wChart'),le=document.getElementById('lChart');
-    if(!we||!le) return;
-    if(winChart) winChart.destroy();
-    if(lossChart) lossChart.destroy();
-    const opt=(labels,data,colors)=>({
-      type:'doughnut',
-      data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw}%`}}}}
-    });
-    winChart=new Chart(we,opt(WIN_D.map(d=>d.n),WIN_D.map(d=>d.v),['#16A34A','#22C55E','#4ADE80','#86EFAC']));
-    lossChart=new Chart(le,opt(LOSS_D.map(d=>d.n),LOSS_D.map(d=>d.v),['#EF4444','#F87171','#FCA5A5','#F97316']));
-    const wLeg=document.getElementById('wLeg'),lLeg=document.getElementById('lLeg');
-    const cs1=['#16A34A','#22C55E','#4ADE80','#86EFAC'],cs2=['#EF4444','#F87171','#FCA5A5','#F97316'];
-    wLeg.innerHTML=WIN_D.map((d,i)=>`<div class="wl-li"><span class="wl-dot" style="background:${cs1[i]}"></span>${esc(d.n)}<span class="wl-pct">${d.v}%</span></div>`).join('');
-    lLeg.innerHTML=LOSS_D.map((d,i)=>`<div class="wl-li"><span class="wl-dot" style="background:${cs2[i]}"></span>${esc(d.n)}<span class="wl-pct">${d.v}%</span></div>`).join('');
-  },100);
+function renderWL(){
+  function bars(el,data,colors){
+    el.innerHTML=data.map((d,i)=>`<div class="bar-item">
+      <span class="bar-lbl">${esc(d.n)}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${d.v}%;background:${colors[i]}"></div></div>
+      <span class="bar-val" style="color:${colors[i]}">${d.v}%</span>
+    </div>`).join('');
+  }
+  bars(document.getElementById('wbars'),WD,WC);
+  bars(document.getElementById('lbars'),LD,LC);
 }
 
-// ── 담당자 테이블 ──
-function renderRepTable(){
-  const reps=[...new Set(ALL_OPP.map(o=>o.담당자).filter(Boolean))];
+function renderRep(){
+  const reps=[...new Set(OPP.map(o=>o.담당자).filter(Boolean))];
   const rows=reps.map(rep=>{
-    const ds=ALL_OPP.filter(o=>o.담당자===rep);
-    const win=ds.filter(o=>o.진행상태==='종료(성공)').length;
-    const fail=ds.filter(o=>o.진행상태==='종료(실패)').length;
-    const ing=ds.filter(o=>o.진행상태==='진행중').length;
-    const hold=ds.filter(o=>o.진행상태==='보류/연기').length;
-    const tot=ds.length;
-    const winRate=tot?Math.round(win/tot*100):0;
-    const failRate=tot?Math.round(fail/tot*100):0;
-    const wc=rateClr(winRate);
-    const stages=STAGES.map((s,i)=>{
-      const cnt=ds.filter(o=>o.단계===s).length;
-      return cnt>0?`<div style="width:18px;height:18px;border-radius:50%;background:${SCOL[i]};color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0" title="${s}: ${cnt}건">${cnt}</div>`:null;
-    }).filter(Boolean).join('');
+    const ds=OPP.filter(o=>o.담당자===rep);
+    const w=ds.filter(o=>o.진행상태==='종료(성공)').length;
+    const f=ds.filter(o=>o.진행상태==='종료(실패)').length;
+    const i=ds.filter(o=>o.진행상태==='진행중').length;
+    const h=ds.filter(o=>o.진행상태==='보류/연기').length;
+    const t=ds.length,wr=t?Math.round(w/t*100):0,fr=t?Math.round(f/t*100):0;
+    const wc=rc(wr);
+    const sdots=STAGES.map((s,si)=>{const cnt=ds.filter(o=>o.단계===s).length;return cnt>0?`<div style="width:18px;height:18px;border-radius:50%;background:${SC[si]};color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-right:2px" title="${s}: ${cnt}건">${cnt}</div>`:null;}).filter(Boolean).join('');
     return `<tr>
-      <td><div style="font-weight:600;color:#0F172A">${esc(rep)}</div><div style="font-size:10px;color:#94A3B8">${esc(GROUP_MAP[rep]||'')}</div></td>
-      <td style="text-align:center"><span class="pill" style="background:#EFF6FF;color:#1E40AF">${tot}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#DBEAFE;color:#1D4ED8">${ing}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#D1FAE5;color:#065F46">${win}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#FEE2E2;color:#991B1B">${fail}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#F3F4F6;color:#374151">${hold}</span></td>
-      <td style="min-width:130px"><div class="rate-wrap"><div class="rate-track"><div class="rate-fill" style="width:${winRate}%;background:${wc}"></div></div><span class="rate-val" style="color:${wc}">${winRate}%</span></div></td>
-      <td style="min-width:130px"><div class="rate-wrap"><div class="rate-track"><div class="rate-fill" style="width:${failRate}%;background:#EF4444"></div></div><span class="rate-val" style="color:#EF4444">${failRate}%</span></div></td>
-      <td><div style="display:flex;gap:3px">${stages}</div></td>
+      <td><div style="font-weight:600">${esc(rep)}</div><div style="font-size:10px;color:#94A3B8">${esc(GM[rep]||'')}</div></td>
+      <td style="text-align:center"><span class="pill" style="background:#EFF6FF;color:#1E40AF">${t}</span></td>
+      <td style="text-align:center"><span class="pill" style="background:#DBEAFE;color:#1D4ED8">${i}</span></td>
+      <td style="text-align:center"><span class="pill" style="background:#D1FAE5;color:#065F46">${w}</span></td>
+      <td style="text-align:center"><span class="pill" style="background:#FEE2E2;color:#991B1B">${f}</span></td>
+      <td style="text-align:center"><span class="pill" style="background:#F3F4F6;color:#374151">${h}</span></td>
+      <td style="min-width:120px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${wr}%;background:${wc}"></div></div><span class="rval" style="color:${wc}">${wr}%</span></div></td>
+      <td style="min-width:120px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${fr}%;background:#EF4444"></div></div><span class="rval" style="color:#EF4444">${fr}%</span></div></td>
+      <td><div style="display:flex;gap:2px;flex-wrap:wrap">${sdots}</div></td>
     </tr>`;
   }).join('');
-  document.getElementById('rep-table').innerHTML=`
-    <thead><tr>
-      <th>담당자</th><th style="text-align:center">전체</th><th style="text-align:center">진행중</th>
-      <th style="text-align:center">성공</th><th style="text-align:center">실패</th><th style="text-align:center">보류</th>
-      <th>성공률</th><th>실패율</th><th>단계 분포</th>
-    </tr></thead>
-    <tbody>${rows}</tbody>`;
+  document.getElementById('reptbl').innerHTML=`
+    <thead><tr><th>담당자</th><th style="text-align:center">전체</th><th style="text-align:center">진행중</th><th style="text-align:center">성공</th><th style="text-align:center">실패</th><th style="text-align:center">보류</th><th>성공률</th><th>실패율</th><th>단계분포</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="9" class="empty">데이터 없음</td></tr>'}</tbody>`;
 }
 
-// ── 계약 리스트 ──
 function renderContracts(){
-  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
-  const oppMap={};
-  ALL_OPP.forEach(o=>{oppMap[String(o.영업기회ID)]=o;});
-  let list=ALL_CONTRACT.map(c=>({...c,opp:oppMap[String(c.영업기회ID)]||null,group:GROUP_MAP[c.담당자]||''}));
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  const om={};OPP.forEach(o=>{om[String(o.영업기회ID)]=o;});
+  let list=CONTRACT.map(c=>({...c,opp:om[String(c.영업기회ID)]||null,group:GM[c.담당자]||''}));
   if(q) list=list.filter(c=>(c.고객사||'').toLowerCase().includes(q)||(c.opp?.영업기회||'').toLowerCase().includes(q)||(c.담당자||'').toLowerCase().includes(q));
-  list.sort((a,b)=>{
-    const av=a[contractSort.col]||'',bv=b[contractSort.col]||'';
-    return(typeof av==='number'?av-bv:av>bv?1:av<bv?-1:0)*contractSort.dir;
-  });
-  document.getElementById('contract-count').textContent='총 '+list.length+'건';
-  function th(col,label){
-    const a=contractSort.col===col;
-    return `<th class="sortable${a?' active':''}" style="${a?'color:#2563EB':''}" onclick="sortContracts('${col}')">${label} ${a?(contractSort.dir===1?'▲':'▼'):'↕'}</th>`;
-  }
+  list.sort((a,b)=>{const av=a[CS.col]||'',bv=b[CS.col]||'';return(typeof av==='number'?av-bv:av>bv?1:av<bv?-1:0)*CS.dir;});
+  document.getElementById('ccount').textContent='총 '+list.length+'건';
+  function th(col,lbl){const a=CS.col===col;return `<th class="sth" style="${a?'color:#2563EB':''}" onclick="sortC('${col}')">${lbl} ${a?(CS.dir===1?'▲':'▼'):'↕'}</th>`;}
   const rows=list.map(c=>`<tr>
-    <td><div style="font-weight:600;color:#0F172A">${esc(c.고객사)}</div></td>
-    <td style="max-width:220px"><div style="font-size:11px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(c.opp?.영업기회||'')}">${esc(c.opp?.영업기회||'-')}</div></td>
-    <td><div style="font-weight:500;color:#0F172A">${esc(c.담당자)}</div><div style="font-size:10px;color:#94A3B8">${esc(c.group)}</div></td>
-    <td style="font-family:'DM Mono',monospace;font-size:11px;color:${META};white-space:nowrap">${esc(c.계약일||'')}</td>
+    <td><div style="font-weight:600">${esc(c.고객사)}</div></td>
+    <td style="max-width:200px"><div style="font-size:11px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(c.opp?.영업기회||'')}">${esc(c.opp?.영업기회||'-')}</div></td>
+    <td><div style="font-weight:500">${esc(c.담당자)}</div><div style="font-size:10px;color:#94A3B8">${esc(c.group)}</div></td>
+    <td style="font-family:monospace;font-size:11px;color:#8496B0;white-space:nowrap">${esc(c.계약일||'')}</td>
     <td>${c.연관제품?`<span class="tag" style="background:#F3F4F6;color:#374151">${esc(c.연관제품)}</span>`:'-'}</td>
-    <td style="text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:#0F172A;white-space:nowrap">${fmtAmtDirect(c.공급가액)}</td>
+    <td style="text-align:right;font-family:monospace;font-weight:600;white-space:nowrap">${fmtAD(c.공급가액)}</td>
   </tr>`).join('');
-  document.getElementById('contract-table').innerHTML=`
+  document.getElementById('ctbl').innerHTML=`
     <thead><tr>${th('고객사','고객사')}<th>영업기회명</th>${th('담당자','담당자')}${th('계약일','계약일')}<th>제품</th>${th('공급가액','금액')}</tr></thead>
-    <tbody>${rows||'<tr><td colspan="6" style="text-align:center;padding:40px;color:#94A3B8">검색 결과가 없습니다.</td></tr>'}</tbody>`;
+    <tbody>${rows||'<tr><td colspan="6" class="empty">데이터 없음</td></tr>'}</tbody>`;
 }
 window.renderContracts=renderContracts;
 
-function sortContracts(col){
-  contractSort={col,dir:contractSort.col===col?contractSort.dir*-1:-1};
-  renderContracts();
+function sortC(col){CS={col,dir:CS.col===col?CS.dir*-1:-1};renderContracts();}
+window.sortC=sortC;
+
+function gotoTab(t){
+  document.getElementById('vp1').className='view'+(t==='p1'?' on':'');
+  document.getElementById('vp2').className='view'+(t==='p2'?' on':'');
+  document.querySelectorAll('.tab').forEach((b,i)=>{b.className='tab '+(i===0&&t==='p1'||i===1&&t==='p2'?'on':'off');});
+  if(t==='p2'){renderRep();renderContracts();}
 }
-window.sortContracts=sortContracts;
+window.gotoTab=gotoTab;
 
-// ── 탭 전환 ──
-function switchTab(tab){
-  currentTab=tab;
-  document.getElementById('view-p1').className='view'+(tab==='p1'?' on':'');
-  document.getElementById('view-p2').className='view'+(tab==='p2'?' on':'');
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-    b.className='tab-btn '+(i===0&&tab==='p1'||i===1&&tab==='p2'?'on':'off');
-  });
-  if(tab==='p2'){renderRepTable();renderContracts();}
-}
-window.switchTab=switchTab;
+function buildGM(rows){const g={};rows.forEach(r=>{if(r['이름'])g[r['이름']]=r['그룹'];});return g;}
 
-// ── 데이터 처리 ──
-function buildGroupMap(rows){
-  const gm={};
-  rows.forEach(r=>{if(r['이름']) gm[r['이름']]=r['그룹'];});
-  return gm;
-}
-
-function processData(oppRows,contractRows,gm){
-  GROUP_MAP=gm;
-  ALL_OPP=oppRows.map(o=>({...o,group:gm[o['담당자']]||''}));
-  ALL_CONTRACT=contractRows.filter(c=>c['영업기회ID']);
-
-  const staleCount=ALL_OPP.filter(o=>isStale(o)).length;
-  const sb=document.getElementById('stale-badge');
-  if(staleCount>0){sb.textContent='🚨 정체 '+staleCount+'건';sb.style.display='';}
-  else sb.style.display='none';
-
-  renderFilterBar();
-  renderCards();
-  renderCharts();
+function load(oppR,contractR,gm){
+  GM=gm;
+  OPP=oppR.map(o=>({...o,group:gm[o['담당자']]||''}));
+  CONTRACT=contractR.filter(c=>c['영업기회ID']);
+  const sc=OPP.filter(o=>stale(o)).length;
+  const bs=document.getElementById('bstale');
+  bs.textContent='🚨 정체 '+sc+'건';
+  bs.style.display=sc>0?'':'none';
+  renderFbar();renderCards();renderWL();
 }
 
-// ── 초기 로드 ──
 async function init(){
   try{
-    const [oppText,contractText,groupText]=await Promise.all([
-      fetch(URLS.opp).then(r=>r.text()),
-      fetch(URLS.contract).then(r=>r.text()),
-      fetch(URLS.group).then(r=>r.text()),
+    const [ot,ct,gt]=await Promise.all([
+      fetch(URLS.opp).then(r=>r.ok?r.text():null).catch(()=>null),
+      fetch(URLS.contract).then(r=>r.ok?r.text():null).catch(()=>null),
+      fetch(URLS.group).then(r=>r.ok?r.text():null).catch(()=>null),
     ]);
-    const gm=buildGroupMap(parseCSV(groupText)||MOCK_GROUP);
-    const oppRows=parseCSV(oppText);
-    const contractRows=parseCSV(contractText);
-    if(oppRows&&oppRows.length>0){
-      processData(oppRows,contractRows&&contractRows.length>0?contractRows:MOCK_CONTRACT,gm);
-      const upd=document.getElementById('upd-badge');
-      upd.textContent='업데이트: '+new Date().toLocaleDateString('ko-KR');
-      upd.style.display='';
-    } else {
-      throw new Error('empty');
-    }
+    const gm=buildGM(gt?csv(gt):MG);
+    const op=ot?csv(ot):null;
+    if(op&&op.length>0){
+      load(op,ct?csv(ct):MC,gm);
+      const bu=document.getElementById('bupd');
+      bu.textContent='업데이트: '+new Date().toLocaleDateString('ko-KR');
+      bu.style.display='';
+    } else throw new Error('empty');
   } catch(e){
-    processData(MOCK_OPP,MOCK_CONTRACT,buildGroupMap(MOCK_GROUP));
-    document.getElementById('mock-badge').style.display='';
+    load(MO,MC,buildGM(MG));
+    document.getElementById('bmock').style.display='';
   }
 }
-
 init();
 </script>
 </body>

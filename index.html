@@ -6,103 +6,136 @@
 <title>영업 파이프라인 CRM</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#F2F5FA;color:#0F172A;min-height:100vh;font-size:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#F5F7FB;color:#1E293B;min-height:100vh;font-size:14px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:4px}
 input,button{font-family:inherit}
 
-.hdr{background:#0B1F45;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(11,31,69,.28)}
+/* ── HEADER ── */
+.hdr{background:#1E3A5F;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(30,58,95,.2)}
 .hdr-left{display:flex;align-items:center;gap:10px}
-.hdr-ic{width:30px;height:30px;background:#2563EB;border-radius:7px;display:flex;align-items:center;justify-content:center}
-.hdr-ic svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.hdr-nm{font-size:14px;font-weight:700;color:#fff}
-.hdr-sb{font-size:10px;color:#93C5FD}
+.hdr-ic{width:28px;height:28px;background:#4A90D9;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.hdr-ic svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hdr-nm{font-size:13px;font-weight:700;color:#fff}
+.hdr-sb{font-size:10px;color:#A8C4E0}
 .hdr-right{display:flex;align-items:center;gap:8px}
-.badge-stale{background:#EF4444;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
-.badge-mock{background:rgba(255,255,255,.2);color:#FCD34D;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
-.badge-upd{font-size:10px;color:#7DD3FC}
+.badge-mock{background:rgba(255,255,255,.15);color:#FDE68A;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-upd{font-size:10px;color:#93C5FD}
 .tabs{display:flex;gap:2px}
 .tab{padding:5px 14px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s}
-.tab.on{background:#2563EB;color:#fff}
-.tab.off{background:transparent;color:#93C5FD}
+.tab.on{background:#4A90D9;color:#fff}
+.tab.off{background:transparent;color:#A8C4E0}
 
-.fbar{background:#fff;border-bottom:1px solid #E4EAF2;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:52px;z-index:40;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.fg{display:flex;align-items:center;gap:6px}
-.fl{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
-.seg{display:flex;background:#F1F5F9;border-radius:8px;padding:2px;gap:2px}
-.sb{padding:4px 10px;border-radius:6px;border:none;background:transparent;font-size:11px;font-weight:600;color:#64748B;cursor:pointer;white-space:nowrap;transition:all .12s}
-.sb.on{background:#fff;color:#0B1F45;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* ── FILTER BAR ── */
+.fbar{background:#fff;border-bottom:1px solid #E8ECF2;padding:10px 22px 10px;display:flex;flex-direction:column;gap:8px;position:sticky;top:50px;z-index:40;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.fbar-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fl{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;min-width:32px}
 .fc{font-size:11px;color:#94A3B8;margin-left:auto}
 .fc strong{color:#475569}
 
-.main{max-width:1280px;margin:0 auto;padding:18px 20px 40px}
+/* 상태 필터 버튼 - 각 상태별 색상 */
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.sb{padding:4px 11px;border-radius:20px;border:1.5px solid transparent;font-size:11px;font-weight:600;cursor:pointer;transition:all .12s;background:#F1F5F9;color:#64748B}
+.sb:hover{filter:brightness(.95)}
+.sb.on{border-color:currentColor}
+
+/* 상태별 색 */
+.sb-all{background:#F1F5F9;color:#475569}
+.sb-all.on{background:#E2E8F0;border-color:#94A3B8}
+.sb-ing{background:#EFF6FF;color:#3B82F6}
+.sb-ing.on{background:#DBEAFE;border-color:#3B82F6}
+.sb-ok{background:#FFF1F2;color:#E11D48}
+.sb-ok.on{background:#FFE4E6;border-color:#E11D48}
+.sb-fail{background:#F8FAFC;color:#64748B}
+.sb-fail.on{background:#E2E8F0;border-color:#64748B}
+.sb-hold{background:#F8FAFC;color:#94A3B8}
+.sb-hold.on{background:#E2E8F0;border-color:#94A3B8}
+
+/* 단계별 색 */
+.sb-s0{background:#FFF7F5;color:#E85D2E}.sb-s0.on{background:#FFE8E1;border-color:#E85D2E}
+.sb-s1{background:#FDF4FF;color:#C026D3}.sb-s1.on{background:#F5D0FE;border-color:#C026D3}
+.sb-s2{background:#EFF6FF;color:#2563EB}.sb-s2.on{background:#DBEAFE;border-color:#2563EB}
+.sb-s3{background:#FFFBEB;color:#D97706}.sb-s3.on{background:#FEF3C7;border-color:#D97706}
+.sb-s4{background:#F0FDF4;color:#16A34A}.sb-s4.on{background:#DCFCE7;border-color:#16A34A}
+
+/* 그룹/담당자 버튼 */
+.sb-n{background:#F8FAFC;color:#475569}.sb-n.on{background:#E2E8F0;border-color:#64748B}
+
+/* ── MAIN ── */
+.main{max-width:1320px;margin:0 auto;padding:16px 20px 40px}
 .view{display:none}
 .view.on{display:block}
-.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
-@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:16px}
+@media(max-width:780px){.grid2{grid-template-columns:1fr}}
 
-.card{background:#fff;border-radius:13px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.04);border:1px solid #E4EAF2}
-.card.stale{border:2px solid #EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+/* ── CARD ── */
+.card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #E8ECF2;transition:box-shadow .15s}
+.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.09)}
+.card.stale{border:1.5px solid #FCA5A5}
 .ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
 .ctl{flex:1;min-width:0}
 .ctags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
 .tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap}
-.ctitle{font-size:13px;font-weight:600;color:#0F172A;line-height:1.4;word-break:keep-all}
-.sbox{flex-shrink:0;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:6px 10px;text-align:center;min-width:58px}
-.sd{font-size:16px;font-weight:700;color:#DC2626;line-height:1;font-family:monospace}
-.sl{font-size:9px;font-weight:600;color:#F87171;margin-top:2px}
+.ctitle{font-size:13px;font-weight:600;color:#1E293B;line-height:1.4;word-break:keep-all}
+.sbox{flex-shrink:0;background:#FFF5F5;border:1px solid #FED7D7;border-radius:8px;padding:4px 8px;text-align:center;min-width:52px}
+.sd{font-size:11px;font-weight:700;color:#DC2626;line-height:1.3;font-family:monospace}
+.sl{font-size:8px;font-weight:600;color:#F87171}
 
-/* pipeline bar */
+/* pipeline */
 .pipe{display:flex;align-items:center;width:100%;padding:2px 0 6px}
-.pnode{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
-.pdot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
-.ptxt{font-size:9px;font-weight:500;white-space:nowrap}
-.pline{flex:1;height:2.5px;margin:0 2px 14px;border-radius:2px;min-width:6px}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0}
+.pdot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.ptxt{font-size:8px;font-weight:500;white-space:nowrap}
+.pline{flex:1;height:2px;margin:0 2px 13px;border-radius:2px;min-width:6px}
 
-.cinfo{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid #F8FAFC;padding-top:10px}
+/* card info */
+.cinfo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid #F1F5F9;padding-top:9px}
 .ci{font-size:11px;color:#475569}
-.cmeta{font-size:11px;color:#8496B0;font-family:monospace}
-.fnote{margin-top:10px;background:#FFF5F5;border:1px solid #FECACA;border-radius:8px;padding:8px 12px;display:flex;gap:7px}
-.fnl{font-size:10px;font-weight:700;color:#991B1B;display:block;margin-bottom:2px}
-.fnt{font-size:11px;color:#7F1D1D;line-height:1.5}
+.cmeta{font-size:11px;color:#94A3B8;font-family:monospace}
+.fnote{margin-top:9px;background:#FAFAFA;border:1px solid #E8ECF2;border-radius:8px;padding:7px 11px;display:flex;gap:7px}
+.fnl{font-size:10px;font-weight:700;color:#64748B;display:block;margin-bottom:1px}
+.fnt{font-size:11px;color:#64748B;line-height:1.5}
 
-/* win/loss bars */
-.wl-card{background:#fff;border-radius:13px;border:1px solid #E4EAF2;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.wl-ttl{font-size:12px;font-weight:600;color:#64748B;margin-bottom:16px}
-.wl-2col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+/* ── WIN/LOSS ── */
+.wl-card{background:#fff;border-radius:12px;border:1px solid #E8ECF2;padding:16px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.wl-ttl{font-size:12px;font-weight:600;color:#64748B;margin-bottom:14px}
+.wl-2col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media(max-width:600px){.wl-2col{grid-template-columns:1fr}}
-.wl-sub{font-size:11px;font-weight:700;margin-bottom:12px}
-.bar-item{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.bar-lbl{font-size:11px;color:#475569;width:120px;flex-shrink:0;text-align:right}
-.bar-track{flex:1;height:10px;background:#F1F5F9;border-radius:20px;overflow:hidden}
+.wl-sub{font-size:11px;font-weight:700;margin-bottom:10px}
+.bar-item{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-lbl{font-size:11px;color:#475569;width:110px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;height:8px;background:#F1F5F9;border-radius:20px;overflow:hidden}
 .bar-fill{height:100%;border-radius:20px}
-.bar-val{font-size:11px;font-weight:600;width:32px;text-align:right;font-family:monospace}
+.bar-val{font-size:11px;font-weight:600;width:30px;text-align:right;font-family:monospace}
 
-/* page 2 */
-.p2sec{background:#fff;border-radius:13px;border:1px solid #E4EAF2;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.p2ttl{font-size:13px;font-weight:600;color:#475569;margin-bottom:14px}
+/* ── PAGE 2 ── */
+.p2-fbar{background:#fff;border-bottom:1px solid #E8ECF2;padding:10px 22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.p2sec{background:#fff;border-radius:12px;border:1px solid #E8ECF2;padding:16px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.p2ttl{font-size:13px;font-weight:600;color:#475569;margin-bottom:12px}
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
-.tbl th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;background:#F8FAFD;border-bottom:1px solid #E4EAF2;white-space:nowrap}
-.tbl td{padding:9px 12px;border-bottom:1px solid #F8FAFC;vertical-align:middle}
+.tbl th{padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;background:#F8FAFD;border-bottom:1px solid #E8ECF2;white-space:nowrap}
+.tbl td{padding:9px 12px;border-bottom:1px solid #F5F7FB;vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:#FAFBFF}
+.tbl th.r{text-align:right}.tbl td.r{text-align:right}
 .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;font-family:monospace}
-.rbar{display:flex;align-items:center;gap:8px}
-.rtrack{flex:1;height:6px;background:#F1F5F9;border-radius:20px;overflow:hidden}
+.rbar{display:flex;align-items:center;gap:7px}
+.rtrack{flex:1;height:5px;background:#F1F5F9;border-radius:20px;overflow:hidden}
 .rfill{height:100%;border-radius:20px}
 .rval{font-size:11px;font-weight:700;width:34px;text-align:right;font-family:monospace}
 .sw{position:relative}
-.sw input{padding:7px 12px 7px 28px;font-size:12px;border:1px solid #E4EAF2;border-radius:8px;outline:none;width:240px;color:#0F172A}
-.sw input:focus{border-color:#2563EB}
-.sw-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:#94A3B8}
+.sw input{padding:6px 12px 6px 28px;font-size:12px;border:1px solid #E8ECF2;border-radius:8px;outline:none;width:220px;color:#1E293B}
+.sw input:focus{border-color:#4A90D9}
+.sw-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:#94A3B8;font-size:12px}
 .sth{cursor:pointer;user-select:none}
 .sth:hover{color:#475569}
-.empty{text-align:center;padding:60px;color:#94A3B8;font-size:13px}
-.p2top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.p2top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.empty{text-align:center;padding:48px;color:#94A3B8;font-size:13px}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="hdr">
   <div class="hdr-left">
     <div class="hdr-ic"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
@@ -111,7 +144,6 @@ input,button{font-family:inherit}
   <div class="hdr-right">
     <span class="badge-mock" id="bmock" style="display:none">📊 Mock Data</span>
     <span class="badge-upd" id="bupd" style="display:none"></span>
-    <span class="badge-stale" id="bstale" style="display:none"></span>
     <div class="tabs">
       <button class="tab on" onclick="gotoTab('p1')">📋 파이프라인</button>
       <button class="tab off" onclick="gotoTab('p2')">📊 상세 현황</button>
@@ -121,37 +153,31 @@ input,button{font-family:inherit}
 
 <!-- PAGE 1 -->
 <div id="vp1" class="view on">
-  <div class="fbar" id="fbar"></div>
+  <div class="fbar" id="fbar1"></div>
   <div class="main">
     <div class="grid2" id="cardgrid"></div>
-    <!-- Win/Loss -->
-    <div class="wl-card">
-      <div class="wl-ttl">📊 Win / Loss 분석</div>
-      <div class="wl-2col">
-        <div>
-          <div class="wl-sub" style="color:#16A34A">🏆 성공 요인</div>
-          <div id="wbars"></div>
-        </div>
-        <div>
-          <div class="wl-sub" style="color:#DC2626">📉 이탈 사유</div>
-          <div id="lbars"></div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
 <!-- PAGE 2 -->
 <div id="vp2" class="view">
+  <div class="p2-fbar" id="fbar2"></div>
   <div class="main">
+    <!-- 그룹별 현황 -->
+    <div class="p2sec">
+      <div class="p2ttl">🏢 그룹별 파이프라인 현황</div>
+      <div style="overflow-x:auto"><table class="tbl" id="grptbl"></table></div>
+    </div>
+    <!-- 담당자별 현황 -->
     <div class="p2sec">
       <div class="p2ttl">👥 담당자별 파이프라인 현황</div>
       <div style="overflow-x:auto"><table class="tbl" id="reptbl"></table></div>
     </div>
+    <!-- 계약 리스트 -->
     <div class="p2sec">
       <div class="p2top">
         <div class="p2ttl" style="margin-bottom:0">📋 계약 리스트 <span id="ccount" style="font-size:11px;color:#94A3B8;font-weight:400"></span></div>
-        <div class="sw"><span class="sw-ico">🔍</span><input id="srch" placeholder="고객사, 영업기회, 담당자 검색..." oninput="renderContracts()"/></div>
+        <div class="sw"><span class="sw-ico">🔍</span><input id="srch" placeholder="고객사, 영업기회, 담당자..." oninput="renderContracts()"/></div>
       </div>
       <div style="overflow-x:auto"><table class="tbl" id="ctbl"></table></div>
     </div>
@@ -159,39 +185,55 @@ input,button{font-family:inherit}
 </div>
 
 <script>
-// ══════════════════════════════════════════════
+// ══════════════════════════════════
 // 구글 시트 CSV URL
-// ══════════════════════════════════════════════
+// ══════════════════════════════════
 const URLS={
   opp:"https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=0&single=true&output=csv",
   contract:"https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=1887387173&single=true&output=csv",
   group:"https://docs.google.com/spreadsheets/d/e/2PACX-1vSartuqFOQxch07oPwHSUzzvOvMchKB5zQugB0Ea7p_xU2c9GIE1xYp9KbbeBvc2ZYDAwwpYON-a7fn/pub?gid=305091937&single=true&output=csv",
 };
 
+// 단계
 const STAGES=['기회인지','제안','견적','계약','개통완료'];
-const SC=['#E85D2E','#C026D3','#2563EB','#D97706','#16A34A'];
-const SM={'진행중':{l:'진행중',bg:'#DBEAFE',tx:'#1E40AF',ic:'●'},'종료(성공)':{l:'완료',bg:'#D1FAE5',tx:'#065F46',ic:'✓'},'종료(실패)':{l:'실패',bg:'#FEE2E2',tx:'#991B1B',ic:'✕'},'보류/연기':{l:'보류',bg:'#F3F4F6',tx:'#374151',ic:'◐'}};
+const SC=['#E8845A','#C84EBF','#4A90D9','#E07A10','#3A9E5A']; // softer
+
+// 진행상태 → 표시 설정
+// 계약/개통완료/종료(성공) = 성공(빨간색계열), 진행중=파란색, 실패/보류=회색
+function statusCfg(진행상태, 단계){
+  // 단계가 계약/개통완료이거나 진행상태가 종료(성공)이면 성공
+  if(진행상태==='종료(성공)'||단계==='계약'||단계==='개통완료'){
+    return {l:'성공', bg:'#FFE4E6', tx:'#BE123C', ic:'✓'};
+  }
+  if(진행상태==='진행중') return {l:'진행중', bg:'#EFF6FF', tx:'#3B82F6', ic:'●'};
+  if(진행상태==='종료(실패)') return {l:'실패', bg:'#F1F5F9', tx:'#64748B', ic:'✕'};
+  if(진행상태==='보류/연기') return {l:'보류', bg:'#F8FAFC', tx:'#94A3B8', ic:'◐'};
+  return {l:진행상태, bg:'#F1F5F9', tx:'#64748B', ic:'·'};
+}
+
+// Win/Loss 분석 데이터
 const WD=[{n:'가격 경쟁력',v:38},{n:'기술 우위',v:29},{n:'관계·신뢰',v:22},{n:'납기·속도',v:11}];
 const LD=[{n:'가격 경쟁력 저하',v:42},{n:'스펙 불일치',v:26},{n:'경쟁사 선택',v:19},{n:'예산 삭감',v:13}];
-const WC=['#16A34A','#22C55E','#4ADE80','#86EFAC'];
-const LC=['#EF4444','#F87171','#FCA5A5','#F97316'];
+const WC=['#DC2626','#EF4444','#F87171','#FCA5A5'];
+const LC=['#64748B','#94A3B8','#CBD5E1','#E2E8F0'];
 
+// ── Mock Data ──
 const MG=[{이름:'박현민',그룹:'1그룹'},{이름:'이영철',그룹:'1그룹'},{이름:'나영기',그룹:'1그룹'},{이름:'조혜란',그룹:'1그룹'},{이름:'김창석',그룹:'1그룹'},{이름:'이민혁',그룹:'2그룹'},{이름:'신헌우',그룹:'2그룹'},{이름:'박준호',그룹:'2그룹'},{이름:'남승지',그룹:'2그룹'},{이름:'김민수',그룹:'3그룹'},{이름:'손민욱',그룹:'3그룹'},{이름:'김동후',그룹:'3그룹'},{이름:'이상호',그룹:'3그룹'}];
 const MO=[
-  {영업기회ID:'1074',영업기회:'(신규)_앰엔와이즈 Colocation',고객사:'엠앤와이즈',담당자:'손민욱',진행상태:'진행중',제품:'기업코로케이션',예상매출:0,시작일:'2026.05.22',변경일:'',단계:'기회인지',비고:''},
-  {영업기회ID:'1073',영업기회:'[재계약] 선문대학교 5차년도 재계약 협의',고객사:'선문대학교',담당자:'이영철',진행상태:'진행중',제품:'기업인터넷',예상매출:8452,시작일:'2026.05.22',변경일:'',단계:'기회인지',비고:''},
-  {영업기회ID:'1072',영업기회:'KINX가산~SL4 간 전용회선 100M 제안',고객사:'케이아이엔엑스',담당자:'나영기',진행상태:'진행중',제품:'기업전용회선',예상매출:2000,시작일:'2026.05.21',변경일:'2026.05.21',단계:'견적',비고:''},
-  {영업기회ID:'1071',영업기회:'Epsilontel KR DIA request 500M',고객사:'Epsilontel',담당자:'이영철',진행상태:'진행중',제품:'글로벌인터넷',예상매출:2100,시작일:'2026.05.18',변경일:'2026.05.21',단계:'견적',비고:''},
-  {영업기회ID:'1066',영업기회:'[전용회선] Telstra / 서초KIDC - 드림마크원 구로DC / 100M',고객사:'텔스트라서비스코리아',담당자:'김창석',진행상태:'진행중',제품:'글로벌DCI',예상매출:1500,시작일:'2026.05.18',변경일:'2026.05.19',단계:'견적',비고:''},
-  {영업기회ID:'1064',영업기회:'[선로설비] China Unicom / KINX가산-LG평촌 / 4Pairs',고객사:'China Unicom Korea',담당자:'김창석',진행상태:'진행중',제품:'글로벌선로설비',예상매출:20000,시작일:'2026.05.18',변경일:'2026.05.20',단계:'견적',비고:''},
-  {영업기회ID:'1063',영업기회:'(신규)_LX 1G 전용회선 영업',고객사:'엘엑스',담당자:'손민욱',진행상태:'진행중',제품:'기업전용회선',예상매출:1400,시작일:'2026.05.11',변경일:'2026.05.20',단계:'제안',비고:''},
-  {영업기회ID:'1057',영업기회:'CJ올리브네트웍스 신규 인터넷전용회선 제안',고객사:'씨제이올리브네트웍스',담당자:'신헌우',진행상태:'진행중',제품:'기업인터넷',예상매출:14000,시작일:'2026.05.11',변경일:'2026.05.18',단계:'견적',비고:''},
-  {영업기회ID:'1045',영업기회:'Megaport 10G*1회선 전용회선',고객사:'Megaport',담당자:'조혜란',진행상태:'보류/연기',제품:'글로벌전용회선',예상매출:2800,시작일:'2026.04.20',변경일:'2026.04.28',단계:'견적',비고:''},
-  {영업기회ID:'1068',영업기회:'AT&T / 논현 KIDC ~ 캐피탈타워 / 200M',고객사:'에이티엔티코리아',담당자:'김창석',진행상태:'종료(성공)',제품:'글로벌전용회선',예상매출:1600,시작일:'2026.05.19',변경일:'2026.05.19',단계:'계약',비고:''},
-  {영업기회ID:'1067',영업기회:'SKB 한일네트웍스 공덕IDC~송도IDC 5M*2회선',고객사:'SK브로드밴드',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:1900,시작일:'2026.04.22',변경일:'2026.05.22',단계:'개통완료',비고:''},
-  {영업기회ID:'1059',영업기회:'[재계약] 아이나비시스템즈 대구전용회선 E1',고객사:'아이나비시스템즈',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:800,시작일:'2026.05.12',변경일:'2026.05.22',단계:'개통완료',비고:''},
-  {영업기회ID:'1036',영업기회:'금융감독원 본원~신용정보원간 30M',고객사:'금융감독원',담당자:'이영철',진행상태:'종료(실패)',제품:'기업전용회선',예상매출:500,시작일:'2026.04.22',변경일:'2026.05.08',단계:'견적',비고:'타 통신사 대비 가격 경쟁력 저하'},
-  {영업기회ID:'930',영업기회:'[Valve] IP Transit KINX Bundang 100GE',고객사:'Valve Software',담당자:'조혜란',진행상태:'종료(실패)',제품:'글로벌IX',예상매출:134400,시작일:'2026.02.06',변경일:'2026.04.06',단계:'제안',비고:'경쟁사 선택 — 가격 조건 불일치'},
+  {영업기회ID:'1074',영업기회:'(신규)_앰엔와이즈 Colocation',고객사:'엠앤와이즈',담당자:'손민욱',진행상태:'진행중',제품:'기업코로케이션',예상매출:0,시작일:'2026.05.22',종료일:'2026.06.21',변경일:'',단계:'기회인지',비고:''},
+  {영업기회ID:'1073',영업기회:'[재계약] 선문대학교 5차년도 재계약 협의',고객사:'선문대학교',담당자:'이영철',진행상태:'진행중',제품:'기업인터넷',예상매출:8452,시작일:'2026.05.22',종료일:'2026.08.31',변경일:'',단계:'기회인지',비고:''},
+  {영업기회ID:'1072',영업기회:'KINX가산~SL4 간 전용회선 100M 제안',고객사:'케이아이엔엑스',담당자:'나영기',진행상태:'진행중',제품:'기업전용회선',예상매출:2000,시작일:'2026.05.21',종료일:'2026.06.20',변경일:'2026.05.21',단계:'견적',비고:''},
+  {영업기회ID:'1066',영업기회:'[전용회선] Telstra / 서초KIDC - 드림마크원 구로DC / 100M',고객사:'텔스트라서비스코리아',담당자:'김창석',진행상태:'진행중',제품:'글로벌DCI',예상매출:1500,시작일:'2026.05.18',종료일:'2026.06.17',변경일:'2026.05.19',단계:'견적',비고:''},
+  {영업기회ID:'1064',영업기회:'[선로설비] China Unicom / KINX가산-LG평촌 / 4Pairs',고객사:'China Unicom Korea',담당자:'김창석',진행상태:'진행중',제품:'글로벌선로설비',예상매출:20000,시작일:'2026.05.18',종료일:'2026.06.17',변경일:'2026.05.20',단계:'견적',비고:''},
+  {영업기회ID:'1063',영업기회:'(신규)_LX 1G 전용회선 영업',고객사:'엘엑스',담당자:'손민욱',진행상태:'진행중',제품:'기업전용회선',예상매출:1400,시작일:'2026.05.11',종료일:'2026.06.14',변경일:'2026.05.20',단계:'제안',비고:''},
+  {영업기회ID:'1057',영업기회:'CJ올리브네트웍스 신규 인터넷전용회선 제안',고객사:'씨제이올리브네트웍스',담당자:'신헌우',진행상태:'진행중',제품:'기업인터넷',예상매출:14000,시작일:'2026.05.11',종료일:'2026.06.12',변경일:'2026.05.18',단계:'견적',비고:''},
+  {영업기회ID:'1045',영업기회:'Megaport 10G*1회선 전용회선',고객사:'Megaport',담당자:'조혜란',진행상태:'보류/연기',제품:'글로벌전용회선',예상매출:2800,시작일:'2026.04.20',종료일:'2026.05.28',변경일:'2026.04.28',단계:'견적',비고:'예산 결정 지연으로 보류'},
+  {영업기회ID:'1068',영업기회:'AT&T / 논현 KIDC ~ 캐피탈타워 / 200M',고객사:'에이티엔티코리아',담당자:'김창석',진행상태:'종료(성공)',제품:'글로벌전용회선',예상매출:1600,시작일:'2026.05.19',종료일:'2026.06.18',변경일:'2026.05.19',단계:'계약',비고:''},
+  {영업기회ID:'1067',영업기회:'SKB 한일네트웍스 공덕IDC~송도IDC 5M*2회선',고객사:'SK브로드밴드',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:1900,시작일:'2026.04.22',종료일:'2026.05.31',변경일:'2026.05.22',단계:'개통완료',비고:''},
+  {영업기회ID:'1059',영업기회:'[재계약] 아이나비시스템즈 대구전용회선 E1',고객사:'아이나비시스템즈',담당자:'이영철',진행상태:'종료(성공)',제품:'기업전용회선',예상매출:800,시작일:'2026.05.12',종료일:'2026.06.30',변경일:'2026.05.22',단계:'개통완료',비고:''},
+  {영업기회ID:'1036',영업기회:'금융감독원 본원~신용정보원간 30M',고객사:'금융감독원',담당자:'이영철',진행상태:'종료(실패)',제품:'기업전용회선',예상매출:500,시작일:'2026.04.22',종료일:'2026.06.30',변경일:'2026.05.08',단계:'견적',비고:'타 통신사 대비 가격 경쟁력 저하'},
+  {영업기회ID:'930',영업기회:'[Valve] IP Transit KINX Bundang 100GE',고객사:'Valve Software',담당자:'조혜란',진행상태:'종료(실패)',제품:'글로벌IX',예상매출:134400,시작일:'2026.02.06',종료일:'2026.03.25',변경일:'2026.04.06',단계:'제안',비고:'경쟁사 선택 — 가격 조건 불일치'},
+  {영업기회ID:'1027',영업기회:'Kaopu Cloud Equinix SL1 ~ DLR ICN10 2회선',고객사:'Kaopu Cloud',담당자:'박준호',진행상태:'종료(실패)',제품:'글로벌전용회선',예상매출:14000,시작일:'2026.03.23',종료일:'2026.04.03',변경일:'2026.04.20',단계:'견적',비고:'스펙 불일치 — 요구 대역폭 충족 불가'},
 ];
 const MC=[
   {고객사:'SK브로드밴드',영업기회ID:'1067',계약일:'2026.05.22',연관제품:'기업전용회선',공급가액:1800,담당자:'이영철'},
@@ -199,11 +241,18 @@ const MC=[
   {고객사:'아이나비시스템즈',영업기회ID:'1059',계약일:'2026.05.19',연관제품:'기업전용회선',공급가액:800,담당자:'이영철'},
   {고객사:'한국도로공사',영업기회ID:'1058',계약일:'2026.05.14',연관제품:'기업전용회선',공급가액:600,담당자:'이영철'},
   {고객사:'Tencent',영업기회ID:'989',계약일:'2026.05.08',연관제품:'글로벌DCI',공급가액:16400,담당자:'김창석'},
+  {고객사:'에스케이텔링크',영업기회ID:'1020',계약일:'2026.05.20',연관제품:'기업전용회선',공급가액:1350,담당자:'나영기'},
+  {고객사:'Alibaba',영업기회ID:'1061',계약일:'2026.05.21',연관제품:'글로벌DCI',공급가액:13800,담당자:'김창석'},
 ];
 
-let OPP=[],CONTRACT=[],GM={},F={status:'전체',stage:'전체',group:'전체',rep:'전체'};
-let CS={col:'계약일',dir:-1};
+// ── 전역 상태 ──
+let OPP=[], CONTRACT=[], GM={};
+let F1={status:'전체',stage:'전체',group:'전체',rep:'전체'};
+let F2={group:'전체'};
+let CS={col:'공급가액',dir:-1};
+let currentTab='p1';
 
+// ── CSV 파서 ──
 function csv(t){
   if(!t||!t.trim()) return [];
   try{
@@ -219,6 +268,7 @@ function csv(t){
   }catch(e){return [];}
 }
 
+// ── 헬퍼 ──
 function dd(s){
   if(!s) return 999;
   const p=String(s).split('.');
@@ -228,89 +278,137 @@ function dd(s){
 function stale(o){return o.진행상태==='진행중'&&!['개통완료','계약'].includes(o.단계)&&dd(o.변경일||o.시작일)>=14;}
 function fmtA(n){
   const v=Number(n)*1000;
-  if(!v) return '';
+  if(!v||v===0) return '';
   if(v>=100000000) return (v/100000000).toFixed(1)+'억원';
   if(v>=10000000) return Math.round(v/10000000)+'천만원';
   if(v>=1000000) return (v/1000000).toFixed(1)+'백만원';
   if(v>=10000) return Math.round(v/10000)+'만원';
   return v.toLocaleString()+'원';
 }
-function fmtAD(n){const v=Number(n)*1000;if(!v)return '-';if(v>=100000000)return(v/100000000).toFixed(1)+'억원';if(v>=10000000)return Math.round(v/10000000)+'천만원';if(v>=1000000)return(v/1000000).toFixed(1)+'백만원';if(v>=10000)return Math.round(v/10000)+'만원';return v.toLocaleString()+'원';}
-function rc(r){return r>=60?'#16A34A':r>=30?'#D97706':'#EF4444';}
+function fmtAD(n){
+  const v=Number(n)*1000;
+  if(!v) return '-';
+  if(v>=100000000) return (v/100000000).toFixed(1)+'억원';
+  if(v>=10000000) return Math.round(v/10000000)+'천만원';
+  if(v>=1000000) return (v/1000000).toFixed(1)+'백만원';
+  if(v>=10000) return Math.round(v/10000)+'만원';
+  return v.toLocaleString()+'원';
+}
+function rc(r){return r>=60?'#DC2626':r>=30?'#F59E0B':'#94A3B8';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+// ── Pipeline Bar HTML ──
 function pipeHTML(o){
   const ci=STAGES.indexOf(o.단계);
   let h='<div class="pipe">';
   STAGES.forEach((s,i)=>{
     const d=i<=ci,c=SC[i];
-    h+=`<div class="pnode"><div class="pdot" style="background:${d?c:'#E5E7EB'};color:${d?'#fff':'#9CA3AF'};${d?`box-shadow:0 1px 5px ${c}55`:''}">${i+1}</div><span class="ptxt" style="color:${d?c:'#9CA3AF'}">${s}</span></div>`;
-    if(i<STAGES.length-1) h+=`<div class="pline" style="background:${i<ci?c:'#E5E7EB'}"></div>`;
+    h+=`<div class="pnode"><div class="pdot" style="background:${d?c:'#E2E8F0'};color:${d?'#fff':'#94A3B8'};${d?`box-shadow:0 1px 4px ${c}44`:''}">${i+1}</div><span class="ptxt" style="color:${d?c:'#94A3B8'}">${s}</span></div>`;
+    if(i<STAGES.length-1) h+=`<div class="pline" style="background:${i<ci?c:'#E2E8F0'}"></div>`;
   });
   return h+'</div>';
 }
 
+// ── Card HTML ──
 function cardHTML(o){
   const st=stale(o), sd=st?dd(o.변경일||o.시작일):0;
   const sa=o.단계==='기회인지'&&Number(o.예상매출)>0;
-  const sn=o.진행상태==='종료(실패)'&&o.비고;
-  const cfg=SM[o.진행상태]||{l:o.진행상태,bg:'#F3F4F6',tx:'#374151',ic:'·'};
-  const rd=o.변경일||o.시작일||'';
+  const cfg=statusCfg(o.진행상태, o.단계);
+  const showNote=(o.진행상태==='종료(실패)'||o.진행상태==='보류/연기')&&o.비고;
+  const endDate=o.종료일||'';
   return `<div class="card${st?' stale':''}">
     <div class="ctop">
       <div class="ctl">
         <div class="ctags">
           <span class="tag" style="background:${cfg.bg};color:${cfg.tx}">${cfg.ic} ${cfg.l}</span>
-          ${o.제품?`<span class="tag" style="background:#F3F4F6;color:#374151">${esc(o.제품)}</span>`:''}
+          ${o.제품?`<span class="tag" style="background:#F1F5F9;color:#64748B">${esc(o.제품)}</span>`:''}
         </div>
         <div class="ctitle">${esc(o.영업기회)}</div>
       </div>
-      ${st?`<div class="sbox"><div class="sd">${sd}일</div><div class="sl">🚨 정체</div></div>`:'<div style="width:58px;flex-shrink:0"></div>'}
+      ${st?`<div class="sbox"><div class="sd">⚠ ${sd}일 정체</div></div>`:'<div style="width:52px;flex-shrink:0"></div>'}
     </div>
     ${pipeHTML(o)}
     <div class="cinfo">
-      <span class="ci"><strong style="color:#0F172A">${esc(o.담당자)}</strong>${o.group?` · ${esc(o.group)}`:''}</span>
+      <span class="ci"><strong style="color:#1E293B">${esc(o.담당자)}</strong>${o.group?` · <span style="color:#94A3B8">${esc(o.group)}</span>`:''}</span>
       <span class="ci">${esc(o.고객사)}</span>
-      <span class="cmeta">${esc(o.시작일)}${rd?' ~ '+esc(rd):''}${sa?'   '+fmtA(o.예상매출):''}</span>
+      <span class="cmeta">${esc(o.시작일)}${endDate?' ~ '+esc(endDate):''}${sa?'  <strong style="color:#475569">'+fmtA(o.예상매출)+'</strong>':''}</span>
     </div>
-    ${sn?`<div class="fnote"><span style="color:#DC2626;flex-shrink:0">📋</span><div><span class="fnl">실패 사유</span><span class="fnt">${esc(o.비고)}</span></div></div>`:''}
+    ${showNote?`<div class="fnote"><span style="font-size:11px;flex-shrink:0">💬</span><div><span class="fnl">${o.진행상태==='종료(실패)'?'실패 사유':'보류 사유'}</span><span class="fnt">${esc(o.비고)}</span></div></div>`:''}
   </div>`;
 }
 
-function filtered(){
+// ── 필터 구성 ──
+function filtered1(){
   return OPP.filter(o=>{
-    if(F.status!=='전체'&&o.진행상태!==F.status) return false;
-    if(F.stage!=='전체'&&o.단계!==F.stage) return false;
-    if(F.group!=='전체'&&o.group!==F.group) return false;
-    if(F.rep!=='전체'&&o.담당자!==F.rep) return false;
+    if(F1.status!=='전체'){
+      if(F1.status==='성공'&&!(o.진행상태==='종료(성공)'||o.단계==='계약'||o.단계==='개통완료')) return false;
+      else if(F1.status==='진행중'&&o.진행상태!=='진행중') return false;
+      else if(F1.status==='실패'&&o.진행상태!=='종료(실패)') return false;
+      else if(F1.status==='보류/연기'&&o.진행상태!=='보류/연기') return false;
+    }
+    if(F1.stage!=='전체'&&o.단계!==F1.stage) return false;
+    if(F1.group!=='전체'&&o.group!==F1.group) return false;
+    if(F1.rep!=='전체'&&o.담당자!==F1.rep) return false;
     return true;
   });
 }
 
-function sf(k,v){F[k]=v;renderFbar();renderCards();}
-window.sf=sf;
+function sf1(k,v){F1[k]=v;renderFbar1();renderCards();}
+window.sf1=sf1;
+function sf2(k,v){F2[k]=v;renderFbar2();renderPage2();}
+window.sf2=sf2;
 
-function renderFbar(){
-  const gs=['전체',...new Set(OPP.map(o=>o.group).filter(Boolean))];
+// ── Filter Bar 1 ──
+function renderFbar1(){
+  const gs=['전체',...new Set(OPP.map(o=>o.group).filter(Boolean))].sort();
   const rs=['전체',...new Set(OPP.map(o=>o.담당자).filter(Boolean))];
-  const ss2=['전체',...STAGES];
-  const sts=['전체','진행중','종료(성공)','종료(실패)','보류/연기'];
-  function seg(fk,opts){return `<div class="seg">${opts.map(v=>`<button class="sb${F[fk]===v?' on':''}" onclick="sf('${fk}','${esc(v)}')">${esc(v)}</button>`).join('')}</div>`;}
-  const fil=filtered();
-  document.getElementById('fbar').innerHTML=`
-    <div class="fg"><span class="fl">상태</span>${seg('status',sts)}</div>
-    <div class="fg"><span class="fl">단계</span>${seg('stage',ss2)}</div>
-    <div class="fg"><span class="fl">그룹</span>${seg('group',gs)}</div>
-    <div class="fg"><span class="fl">담당자</span>${seg('rep',rs)}</div>
-    <span class="fc">총 <strong>${fil.length}</strong>건</span>`;
+  const fil=filtered1();
+
+  const statusBtns=[
+    {v:'전체',l:'전체',cls:'sb-all'},
+    {v:'진행중',l:'진행중',cls:'sb-ing'},
+    {v:'성공',l:'성공',cls:'sb-ok'},
+    {v:'실패',l:'실패',cls:'sb-fail'},
+    {v:'보류/연기',l:'보류',cls:'sb-hold'},
+  ];
+  const stageBtns=[{v:'전체',l:'전체',cls:'sb-all'},...STAGES.map((s,i)=>({v:s,l:s,cls:`sb-s${i}`}))];
+
+  document.getElementById('fbar1').innerHTML=`
+    <div class="fbar-row">
+      <span class="fl">상태</span>
+      <div class="seg">${statusBtns.map(b=>`<button class="sb ${b.cls}${F1.status===b.v?' on':''}" onclick="sf1('status','${b.v}')">${b.l}</button>`).join('')}</div>
+    </div>
+    <div class="fbar-row">
+      <span class="fl">단계</span>
+      <div class="seg">${stageBtns.map(b=>`<button class="sb ${b.cls}${F1.stage===b.v?' on':''}" onclick="sf1('stage','${b.v}')">${b.l}</button>`).join('')}</div>
+    </div>
+    <div class="fbar-row">
+      <span class="fl">그룹</span>
+      <div class="seg">${gs.map(v=>`<button class="sb sb-n${F1.group===v?' on':''}" onclick="sf1('group','${esc(v)}')">${esc(v)}</button>`).join('')}</div>
+    </div>
+    <div class="fbar-row">
+      <span class="fl">담당자</span>
+      <div class="seg">${rs.map(v=>`<button class="sb sb-n${F1.rep===v?' on':''}" onclick="sf1('rep','${esc(v)}')">${esc(v)}</button>`).join('')}</div>
+      <span class="fc">총 <strong>${fil.length}</strong>건</span>
+    </div>`;
 }
 
+// ── Filter Bar 2 ──
+function renderFbar2(){
+  const gs=['전체',...new Set(OPP.map(o=>o.group).filter(Boolean))].sort();
+  document.getElementById('fbar2').innerHTML=`
+    <span class="fl">그룹</span>
+    <div class="seg">${gs.map(v=>`<button class="sb sb-n${F2.group===v?' on':''}" onclick="sf2('group','${esc(v)}')">${esc(v)}</button>`).join('')}</div>`;
+}
+
+// ── Cards ──
 function renderCards(){
-  const fil=filtered();
+  const fil=filtered1();
   const g=document.getElementById('cardgrid');
   g.innerHTML=fil.length?fil.map(cardHTML).join(''):'<div class="empty">조건에 맞는 영업기회가 없습니다.</div>';
 }
 
+// ── Win/Loss ──
 function renderWL(){
   function bars(el,data,colors){
     el.innerHTML=data.map((d,i)=>`<div class="bar-item">
@@ -323,52 +421,104 @@ function renderWL(){
   bars(document.getElementById('lbars'),LD,LC);
 }
 
-function renderRep(){
-  const reps=[...new Set(OPP.map(o=>o.담당자).filter(Boolean))];
-  const rows=reps.map(rep=>{
-    const ds=OPP.filter(o=>o.담당자===rep);
-    const w=ds.filter(o=>o.진행상태==='종료(성공)').length;
+// ── 그룹/담당자 통계 필터 적용 ──
+function filteredOppByGroup(){
+  if(F2.group==='전체') return OPP;
+  return OPP.filter(o=>o.group===F2.group);
+}
+function filteredContractByGroup(){
+  if(F2.group==='전체') return CONTRACT;
+  return CONTRACT.map(c=>({...c,group:GM[c.담당자]||''})).filter(c=>c.group===F2.group||F2.group==='전체');
+}
+
+// ── Group Table ──
+function renderGrpTable(){
+  const opps=filteredOppByGroup();
+  const groups=['1그룹','2그룹','3그룹'];
+  const rows=groups.map(grp=>{
+    const ds=OPP.filter(o=>o.group===grp);
+    if(!ds.length) return null;
+    const w=ds.filter(o=>o.진행상태==='종료(성공)'||o.단계==='계약'||o.단계==='개통완료').length;
     const f=ds.filter(o=>o.진행상태==='종료(실패)').length;
     const i=ds.filter(o=>o.진행상태==='진행중').length;
     const h=ds.filter(o=>o.진행상태==='보류/연기').length;
-    const t=ds.length,wr=t?Math.round(w/t*100):0,fr=t?Math.round(f/t*100):0;
-    const wc=rc(wr);
-    const sdots=STAGES.map((s,si)=>{const cnt=ds.filter(o=>o.단계===s).length;return cnt>0?`<div style="width:18px;height:18px;border-radius:50%;background:${SC[si]};color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-right:2px" title="${s}: ${cnt}건">${cnt}</div>`:null;}).filter(Boolean).join('');
+    const t=ds.length;
+    const wr=t?Math.round(w/t*100):0;
+    const fr=t?Math.round(f/t*100):0;
+    const ir=t?Math.round(i/t*100):0;
     return `<tr>
-      <td><div style="font-weight:600">${esc(rep)}</div><div style="font-size:10px;color:#94A3B8">${esc(GM[rep]||'')}</div></td>
-      <td style="text-align:center"><span class="pill" style="background:#EFF6FF;color:#1E40AF">${t}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#DBEAFE;color:#1D4ED8">${i}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#D1FAE5;color:#065F46">${w}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#FEE2E2;color:#991B1B">${f}</span></td>
-      <td style="text-align:center"><span class="pill" style="background:#F3F4F6;color:#374151">${h}</span></td>
-      <td style="min-width:120px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${wr}%;background:${wc}"></div></div><span class="rval" style="color:${wc}">${wr}%</span></div></td>
-      <td style="min-width:120px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${fr}%;background:#EF4444"></div></div><span class="rval" style="color:#EF4444">${fr}%</span></div></td>
-      <td><div style="display:flex;gap:2px;flex-wrap:wrap">${sdots}</div></td>
+      <td><strong style="color:#1E293B">${grp}</strong></td>
+      <td class="r"><span class="pill" style="background:#EFF6FF;color:#3B82F6">${t}</span></td>
+      <td class="r"><span class="pill" style="background:#EFF6FF;color:#3B82F6">${i}</span></td>
+      <td class="r"><span class="pill" style="background:#FFE4E6;color:#BE123C">${w}</span></td>
+      <td class="r"><span class="pill" style="background:#F1F5F9;color:#64748B">${f}</span></td>
+      <td class="r"><span class="pill" style="background:#F8FAFC;color:#94A3B8">${h}</span></td>
+      <td style="min-width:110px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${wr}%;background:#DC2626"></div></div><span class="rval" style="color:#DC2626">${wr}%</span></div></td>
+      <td style="min-width:110px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${fr}%;background:#94A3B8"></div></div><span class="rval" style="color:#94A3B8">${fr}%</span></div></td>
+      <td style="min-width:110px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${ir}%;background:#3B82F6"></div></div><span class="rval" style="color:#3B82F6">${ir}%</span></div></td>
     </tr>`;
-  }).join('');
-  document.getElementById('reptbl').innerHTML=`
-    <thead><tr><th>담당자</th><th style="text-align:center">전체</th><th style="text-align:center">진행중</th><th style="text-align:center">성공</th><th style="text-align:center">실패</th><th style="text-align:center">보류</th><th>성공률</th><th>실패율</th><th>단계분포</th></tr></thead>
-    <tbody>${rows||'<tr><td colspan="9" class="empty">데이터 없음</td></tr>'}</tbody>`;
+  }).filter(Boolean).join('');
+  document.getElementById('grptbl').innerHTML=`
+    <thead><tr><th>그룹</th><th class="r">전체</th><th class="r">진행중</th><th class="r">성공</th><th class="r">실패</th><th class="r">보류</th><th>성공률</th><th>실패율</th><th>진행률</th></tr></thead>
+    <tbody>${rows}</tbody>`;
 }
 
+// ── Rep Table (전체 높은 순) ──
+function renderRepTable(){
+  const opps=filteredOppByGroup();
+  const reps=[...new Set(opps.map(o=>o.담당자).filter(Boolean))];
+  const stats=reps.map(rep=>{
+    const ds=OPP.filter(o=>o.담당자===rep&&(F2.group==='전체'||o.group===F2.group));
+    const w=ds.filter(o=>o.진행상태==='종료(성공)'||o.단계==='계약'||o.단계==='개통완료').length;
+    const f=ds.filter(o=>o.진행상태==='종료(실패)').length;
+    const i=ds.filter(o=>o.진행상태==='진행중').length;
+    const h=ds.filter(o=>o.진행상태==='보류/연기').length;
+    const t=ds.length;
+    return {rep,group:GM[rep]||'',t,i,w,f,h,wr:t?Math.round(w/t*100):0,fr:t?Math.round(f/t*100):0};
+  }).sort((a,b)=>b.t-a.t); // 전체 높은 순
+
+  const rows=stats.map(r=>`<tr>
+    <td><div style="font-weight:600;color:#1E293B">${esc(r.rep)}</div><div style="font-size:10px;color:#94A3B8">${esc(r.group)}</div></td>
+    <td class="r"><span class="pill" style="background:#EFF6FF;color:#3B82F6">${r.t}</span></td>
+    <td class="r"><span class="pill" style="background:#EFF6FF;color:#3B82F6">${r.i}</span></td>
+    <td class="r"><span class="pill" style="background:#FFE4E6;color:#BE123C">${r.w}</span></td>
+    <td class="r"><span class="pill" style="background:#F1F5F9;color:#64748B">${r.f}</span></td>
+    <td class="r"><span class="pill" style="background:#F8FAFC;color:#94A3B8">${r.h}</span></td>
+    <td style="min-width:110px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${r.wr}%;background:#DC2626"></div></div><span class="rval" style="color:#DC2626">${r.wr}%</span></div></td>
+    <td style="min-width:110px"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:${r.fr}%;background:#94A3B8"></div></div><span class="rval" style="color:#94A3B8">${r.fr}%</span></div></td>
+  </tr>`).join('');
+  document.getElementById('reptbl').innerHTML=`
+    <thead><tr><th>담당자</th><th class="r">전체</th><th class="r">진행중</th><th class="r">성공</th><th class="r">실패</th><th class="r">보류</th><th>성공률</th><th>실패율</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="8" class="empty">데이터 없음</td></tr>'}</tbody>`;
+}
+
+// ── Contract List (금액 높은 순) ──
 function renderContracts(){
   const q=(document.getElementById('srch')?.value||'').toLowerCase();
   const om={};OPP.forEach(o=>{om[String(o.영업기회ID)]=o;});
-  let list=CONTRACT.map(c=>({...c,opp:om[String(c.영업기회ID)]||null,group:GM[c.담당자]||''}));
+  let list=CONTRACT.map(c=>({...c,opp:om[String(c.영업기회ID||c['영업기회ID'])]||null,group:GM[c.담당자||c['담당자']]||'',_amt:Number(c.공급가액||c['공급가액']||0)}));
+  // 그룹 필터
+  if(F2.group!=='전체') list=list.filter(c=>c.group===F2.group);
+  // 검색
   if(q) list=list.filter(c=>(c.고객사||'').toLowerCase().includes(q)||(c.opp?.영업기회||'').toLowerCase().includes(q)||(c.담당자||'').toLowerCase().includes(q));
-  list.sort((a,b)=>{const av=a[CS.col]||'',bv=b[CS.col]||'';return(typeof av==='number'?av-bv:av>bv?1:av<bv?-1:0)*CS.dir;});
+  // 정렬
+  list.sort((a,b)=>{
+    const av=a[CS.col]||a._amt||'', bv=b[CS.col]||b._amt||'';
+    if(CS.col==='공급가액') return (b._amt-a._amt)*Math.sign(-CS.dir+0.001)||b._amt-a._amt; // 금액 높은 순 기본
+    return(typeof av==='number'?av-bv:av>bv?1:av<bv?-1:0)*CS.dir;
+  });
   document.getElementById('ccount').textContent='총 '+list.length+'건';
-  function th(col,lbl){const a=CS.col===col;return `<th class="sth" style="${a?'color:#2563EB':''}" onclick="sortC('${col}')">${lbl} ${a?(CS.dir===1?'▲':'▼'):'↕'}</th>`;}
+  function th(col,lbl){const a=CS.col===col;return `<th class="sth r" style="${a?'color:#3B82F6':''}" onclick="sortC('${col}')">${lbl} ${a?(CS.dir===1?'▲':'▼'):'↕'}</th>`;}
   const rows=list.map(c=>`<tr>
-    <td><div style="font-weight:600">${esc(c.고객사)}</div></td>
+    <td><div style="font-weight:600;color:#1E293B">${esc(c.고객사||c['고객사']||'')}</div></td>
     <td style="max-width:200px"><div style="font-size:11px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(c.opp?.영업기회||'')}">${esc(c.opp?.영업기회||'-')}</div></td>
-    <td><div style="font-weight:500">${esc(c.담당자)}</div><div style="font-size:10px;color:#94A3B8">${esc(c.group)}</div></td>
-    <td style="font-family:monospace;font-size:11px;color:#8496B0;white-space:nowrap">${esc(c.계약일||'')}</td>
-    <td>${c.연관제품?`<span class="tag" style="background:#F3F4F6;color:#374151">${esc(c.연관제품)}</span>`:'-'}</td>
-    <td style="text-align:right;font-family:monospace;font-weight:600;white-space:nowrap">${fmtAD(c.공급가액)}</td>
+    <td><div style="font-weight:500">${esc(c.담당자||c['담당자']||'')}</div><div style="font-size:10px;color:#94A3B8">${esc(c.group)}</div></td>
+    <td style="font-family:monospace;font-size:11px;color:#94A3B8;white-space:nowrap">${esc(c.계약일||c['계약일']||'')}</td>
+    <td>${(c.연관제품||c['연관제품'])?`<span class="tag" style="background:#F1F5F9;color:#64748B">${esc(c.연관제품||c['연관제품'])}</span>`:'-'}</td>
+    <td class="r" style="font-family:monospace;font-weight:600;color:#1E293B;white-space:nowrap">${fmtAD(c._amt)}</td>
   </tr>`).join('');
   document.getElementById('ctbl').innerHTML=`
-    <thead><tr>${th('고객사','고객사')}<th>영업기회명</th>${th('담당자','담당자')}${th('계약일','계약일')}<th>제품</th>${th('공급가액','금액')}</tr></thead>
+    <thead><tr><th>고객사</th><th>영업기회명</th><th>담당자</th><th>계약일</th><th>제품</th>${th('공급가액','금액')}</tr></thead>
     <tbody>${rows||'<tr><td colspan="6" class="empty">데이터 없음</td></tr>'}</tbody>`;
 }
 window.renderContracts=renderContracts;
@@ -376,25 +526,27 @@ window.renderContracts=renderContracts;
 function sortC(col){CS={col,dir:CS.col===col?CS.dir*-1:-1};renderContracts();}
 window.sortC=sortC;
 
+// ── Tab ──
 function gotoTab(t){
+  currentTab=t;
   document.getElementById('vp1').className='view'+(t==='p1'?' on':'');
   document.getElementById('vp2').className='view'+(t==='p2'?' on':'');
   document.querySelectorAll('.tab').forEach((b,i)=>{b.className='tab '+(i===0&&t==='p1'||i===1&&t==='p2'?'on':'off');});
-  if(t==='p2'){renderRep();renderContracts();}
+  if(t==='p2') renderPage2();
 }
 window.gotoTab=gotoTab;
 
+function renderPage2(){renderFbar2();renderGrpTable();renderRepTable();renderContracts();}
+
+// ── Data Load ──
 function buildGM(rows){const g={};rows.forEach(r=>{if(r['이름'])g[r['이름']]=r['그룹'];});return g;}
 
-function load(oppR,contractR,gm){
+function loadData(oppR,contractR,gm){
   GM=gm;
   OPP=oppR.map(o=>({...o,group:gm[o['담당자']]||''}));
-  CONTRACT=contractR.filter(c=>c['영업기회ID']);
-  const sc=OPP.filter(o=>stale(o)).length;
-  const bs=document.getElementById('bstale');
-  bs.textContent='🚨 정체 '+sc+'건';
-  bs.style.display=sc>0?'':'none';
-  renderFbar();renderCards();renderWL();
+  CONTRACT=contractR;
+  renderFbar1();
+  renderCards();
 }
 
 async function init(){
@@ -407,13 +559,13 @@ async function init(){
     const gm=buildGM(gt?csv(gt):MG);
     const op=ot?csv(ot):null;
     if(op&&op.length>0){
-      load(op,ct?csv(ct):MC,gm);
+      loadData(op, ct?csv(ct):MC, gm);
       const bu=document.getElementById('bupd');
       bu.textContent='업데이트: '+new Date().toLocaleDateString('ko-KR');
       bu.style.display='';
     } else throw new Error('empty');
-  } catch(e){
-    load(MO,MC,buildGM(MG));
+  }catch(e){
+    loadData(MO,MC,buildGM(MG));
     document.getElementById('bmock').style.display='';
   }
 }

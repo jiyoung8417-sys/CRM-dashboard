@@ -71,7 +71,7 @@ input,button{font-family:inherit}
 /* ── CARD ── */
 .card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #E8ECF2;transition:box-shadow .15s}
 .card:hover{box-shadow:0 2px 8px rgba(0,0,0,.09)}
-.card.stale{border:1.5px solid #FCA5A5}
+.card.stale{border:2px solid #EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
 .ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
 .ctl{flex:1;min-width:0}
 .ctags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
@@ -92,9 +92,9 @@ input,button{font-family:inherit}
 .cinfo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid #F1F5F9;padding-top:9px}
 .ci{font-size:11px;color:#475569}
 .cmeta{font-size:11px;color:#94A3B8;font-family:monospace}
-.fnote{margin-top:9px;background:#FAFAFA;border:1px solid #E8ECF2;border-radius:8px;padding:7px 11px;display:flex;gap:7px}
-.fnl{font-size:10px;font-weight:700;color:#64748B;display:block;margin-bottom:1px}
-.fnt{font-size:11px;color:#64748B;line-height:1.5}
+.fnote{margin-top:9px;background:#FFF5F5;border:1px solid #FED7D7;border-radius:8px;padding:7px 11px;display:flex;gap:7px}
+.fnl{font-size:10px;font-weight:700;color:#DC2626;display:block;margin-bottom:1px}
+.fnt{font-size:11px;color:#DC2626;line-height:1.5}
 
 /* ── WIN/LOSS ── */
 .wl-card{background:#fff;border-radius:12px;border:1px solid #E8ECF2;padding:16px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
@@ -196,7 +196,7 @@ const URLS={
 
 // 단계
 const STAGES=['기회인지','제안','견적','계약','개통완료'];
-const SC=['#E8845A','#C84EBF','#4A90D9','#E07A10','#3A9E5A']; // softer
+const SC=['#FBCFE8','#F9A8D4','#F59E0B','#EF4444','#DB2777']; // 기회인지/제안=핑크, 견적=앰버, 계약=빨강, 개통완료=진핑크
 
 // 진행상태 → 표시 설정
 // 계약/개통완료/종료(성공) = 성공(빨간색계열), 진행중=파란색, 실패/보류=회색
@@ -360,7 +360,7 @@ window.sf2=sf2;
 
 // ── Filter Bar 1 ──
 function renderFbar1(){
-  const gs=['전체',...new Set(OPP.map(o=>o.group).filter(Boolean))].sort();
+  const gs=['전체','1그룹','2그룹','3그룹'].filter(g=>g==='전체'||new Set(OPP.map(o=>o.group)).has(g));
   const rs=['전체',...new Set(OPP.map(o=>o.담당자).filter(Boolean))];
   const fil=filtered1();
 
@@ -395,7 +395,7 @@ function renderFbar1(){
 
 // ── Filter Bar 2 ──
 function renderFbar2(){
-  const gs=['전체',...new Set(OPP.map(o=>o.group).filter(Boolean))].sort();
+  const gs=['전체','1그룹','2그룹','3그룹'].filter(g=>g==='전체'||new Set(OPP.map(o=>o.group)).has(g));
   document.getElementById('fbar2').innerHTML=`
     <span class="fl">그룹</span>
     <div class="seg">${gs.map(v=>`<button class="sb sb-n${F2.group===v?' on':''}" onclick="sf2('group','${esc(v)}')">${esc(v)}</button>`).join('')}</div>`;

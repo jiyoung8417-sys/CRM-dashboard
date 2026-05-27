@@ -312,10 +312,11 @@ function pipeHTML(o){
 // ── Card HTML ──
 function cardHTML(o){
   const st=stale(o), sd=st?dd(o.변경일||o.시작일):0;
-  const sa=o.단계==='기회인지'&&Number(o.예상매출)>0;
+  const amt=Number(o.예상매출||o['예상매출']||0);
+  const showAmt=amt>0;
   const cfg=statusCfg(o.진행상태, o.단계);
   const showNote=(o.진행상태==='종료(실패)'||o.진행상태==='보류/연기')&&o.비고;
-  const endDate=o.종료일||'';
+  const endDate=o.종료일||o['종료일']||'';
   return `<div class="card${st?' stale':''}">
     <div class="ctop">
       <div class="ctl">
@@ -331,7 +332,7 @@ function cardHTML(o){
     <div class="cinfo">
       <span class="ci"><strong style="color:#1E293B">${esc(o.담당자)}</strong>${o.group?` · <span style="color:#94A3B8">${esc(o.group)}</span>`:''}</span>
       <span class="ci">${esc(o.고객사)}</span>
-      <span class="cmeta">${esc(o.시작일)}${endDate?' ~ '+esc(endDate):''}${sa?'  <strong style="color:#475569">'+fmtA(o.예상매출)+'</strong>':''}</span>
+      <span class="cmeta">${esc(o.시작일)}${endDate?' ~ '+esc(endDate):''}${showAmt?'&nbsp;&nbsp;'+fmtA(amt):''}</span>
     </div>
     ${showNote?`<div class="fnote"><span style="font-size:11px;flex-shrink:0">💬</span><div><span class="fnl">${o.진행상태==='종료(실패)'?'실패 사유':'보류 사유'}</span><span class="fnt">${esc(o.비고)}</span></div></div>`:''}
   </div>`;

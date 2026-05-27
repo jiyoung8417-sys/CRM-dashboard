@@ -71,7 +71,7 @@ input,button{font-family:inherit}
 /* ── CARD ── */
 .card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #E8ECF2;transition:box-shadow .15s}
 .card:hover{box-shadow:0 2px 8px rgba(0,0,0,.09)}
-.card.stale{border:2px solid #EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+.card.stale{border:1px solid #E8ECF2}
 .ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
 .ctl{flex:1;min-width:0}
 .ctags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
@@ -404,6 +404,9 @@ function renderFbar2(){
 // ── Cards ──
 function renderCards(){
   const fil=filtered1();
+  // 진행중/성공 먼저, 보류/연기 중간, 종료(실패) 맨 아래
+  const order={'진행중':0,'종료(성공)':1,'보류/연기':2,'종료(실패)':3};
+  fil.sort((a,b)=>(order[a.진행상태]??1)-(order[b.진행상태]??1));
   const g=document.getElementById('cardgrid');
   g.innerHTML=fil.length?fil.map(cardHTML).join(''):'<div class="empty">조건에 맞는 영업기회가 없습니다.</div>';
 }

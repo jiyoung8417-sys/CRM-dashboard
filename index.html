@@ -366,7 +366,9 @@ function csv(t){
       vs.push(c);
       const o={}; hs.forEach((h,i)=>o[h]=(vs[i]||'').replace(/^"|"$/g,'').trim());
       return o;
-    }).filter(r=>Object.values(r).some(v=>v&&v.trim())).filter(r=>r['영업기회']&&r['영업기회'].trim());
+    }).filter(r=>Object.values(r).some(v=>v&&v.trim()))
+      .filter(r=>r['영업기회']&&r['영업기회'].trim())
+      .filter(r=>{const id=r['영업기회ID']||r['영업기회Id']||''; return !id||/^\d+$/.test(String(id).trim());});
   }catch(e){return [];}
 }
 
@@ -462,18 +464,11 @@ function setSumFilter(v){F1.sumStatus=v;F1.stage='전체';F1.group='전체';F1.r
 window.setSumFilter=setSumFilter;
 
 function renderFbar1(){
-  const gs=['전체','1그룹','2그룹','3그룹'].filter(g=>g==='전체'||new Set(OPP.map(o=>o.group)).has(g));
+  const gs=['전체','1그룹','2그룹','3그룹'];
   const rs=['전체',...new Set(OPP.map(o=>o.담당자).filter(Boolean))];
   const fil=filtered1();
   const stageBtns=[{v:'전체',l:'전체'},...STAGES.map(s=>({v:s,l:s}))];
   document.getElementById('fbar1').innerHTML=`
-    <div class="frow" style="margin-bottom:2px">
-      <div style="position:relative;flex:1;max-width:340px">
-        <span style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:13px;pointer-events:none">🔍</span>
-        <input id="hdr-search" oninput="renderCards()" placeholder="고객사, 영업기회, 담당자 검색..."
-          style="width:100%;padding:6px 8px 6px 22px;border:none;border-bottom:2px solid #3B6FD4;background:transparent;font-size:12px;color:#1E293B;outline:none;font-family:inherit"/>
-      </div>
-    </div>
     <div class="frow">
       <span class="fl">단계</span>
       <div class="seg">${stageBtns.map(b=>`<button class="sb${F1.stage===b.v?' on':''}" onclick="sf1('stage','${b.v}')">${b.l}</button>`).join('')}</div>
@@ -488,7 +483,12 @@ function renderFbar1(){
         const left=v!=='전체'&&LEFT_SET.has(v);
         return `<button class="sb${F1.rep===v?' on':''}" onclick="sf1('rep','${esc(v)}')" style="${left?'text-decoration:line-through;color:rgba(148,163,184,.5)':''}">${esc(v)}${left?' 📦':''}</button>`;
       }).join('')}</div>
-      <span class="fbar-count">총 <strong>${fil.length}</strong>건</span>
+      <span class="fbar-count" style="margin-left:auto">총 <strong>${fil.length}</strong>건</span>
+      <div style="position:relative;margin-left:16px;flex-shrink:0">
+        <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:12px;pointer-events:none">🔍</span>
+        <input id="hdr-search" oninput="renderCards()" placeholder="고객사, 영업기회, 담당자 검색..."
+          style="padding:5px 12px 5px 28px;border:none;border-bottom:2px solid #3B6FD4;background:transparent;font-size:12px;color:#1E293B;outline:none;font-family:inherit;width:230px"/>
+      </div>
     </div>`;
 }
 
@@ -510,7 +510,7 @@ function sf2(k,v){F2[k]=v;renderFbar2();renderPage2();}
 window.sf2=sf2;
 
 function renderFbar2(){
-  const gs=['전체','1그룹','2그룹','3그룹'].filter(g=>g==='전체'||new Set(OPP.map(o=>o.group)).has(g));
+  const gs=['전체','1그룹','2그룹','3그룹'];
   document.getElementById('fbar2').innerHTML=`
     <span style="font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.06em">그룹</span>
     <div class="seg">${gs.map(v=>`<button class="sb${F2.group===v?' on':''}" onclick="sf2('group','${esc(v)}')">${esc(v)}</button>`).join('')}</div>`;
@@ -652,10 +652,19 @@ function renderPage2(){renderFbar2();renderGrpTable();renderRepTable();renderCon
 
 function buildGM(rows){
   const g={};
+  if(!rows||!rows.length) return g;
+  // 첫 행 키 확인해서 컬럼명 자동 탐지
+  const sample=rows[0];
+  const keys=Object.keys(sample);
+  const nameKey=keys.find(k=>/이름|name|담당자|사원|직원/i.test(k))||keys[0];
+  const grpKey =keys.find(k=>/그룹|group/i.test(k))||keys[1];
+  const leftKey=keys.find(k=>/발령|left|이관|퇴사/i.test(k));
   rows.forEach(r=>{
-    if(r['이름']){
-      g[r['이름']]=r['그룹'];
-      if(r['발령']==='Y'||r['발령']==='y') LEFT_SET.add(r['이름']);
+    const name=(r[nameKey]||'').trim();
+    const grp =(r[grpKey] ||'').trim();
+    if(name){
+      g[name]=grp;
+      if(leftKey&&(r[leftKey]==='Y'||r[leftKey]==='y')) LEFT_SET.add(name);
     }
   });
   return g;
